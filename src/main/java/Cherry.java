@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Cherry {
     static Scanner scanner = new Scanner(System.in);
-    static String[] tasks = new String[100];
+    static Task[] tasks = new Task[100];
     static int taskCount = 0;
 
     public static String list() {
@@ -11,7 +11,7 @@ public class Cherry {
         }
         StringBuilder list = new StringBuilder();
         for (int i = 0; i < taskCount; i += 1) {
-            list.append((i + 1)).append(". ").append(tasks[i]).append("\n");
+            list.append((i + 1)).append(". ").append(tasks[i].description).append("\n");
         }
         return list.toString();
     }
@@ -25,7 +25,7 @@ public class Cherry {
             printMessage(list());
             prompt();
         } else {
-            tasks[taskCount] = input;
+            tasks[taskCount] = new Task(input);
             taskCount += 1;
             printMessage("New Task: " + input);
             prompt();
