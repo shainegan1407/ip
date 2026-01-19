@@ -24,7 +24,7 @@ public class Cherry {
     public static void main(String[] args) {
         String logo = """
                   ___I_
-                 /\\-_--\\ 
+                 /\\-_--\\
                 /  \\_-__\\
          (•◡•)  |[]| [] |
         """;
