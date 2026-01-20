@@ -11,9 +11,7 @@ public class Cherry {
         }
         StringBuilder list = new StringBuilder();
         for (int i = 0; i < taskCount; i += 1) {
-            list.append((i + 1)).append(". [")
-                    .append(tasks[i].getStatusIcon()).append("] ")
-                    .append(tasks[i].description).append("\n");
+            list.append((i + 1)).append(". ").append(tasks[i].toString()).append("\n");
         }
         return list.toString();
     }
@@ -21,10 +19,33 @@ public class Cherry {
     public static void prompt() {
         System.out.println("☆ Type below ☆");
         String input = scanner.nextLine();
-        String[] tokens = input.split(" ", 2);
+        String[] tokens = input.split(" ", 50);
         String command = tokens[0];
 
         switch (command) {
+            case "todo" -> {
+                tasks[taskCount] = new Task(input);
+                taskCount += 1;
+                printMessage("New Task: " + input);
+                prompt();
+            }
+            case "event" -> {
+                for (int i = 0; i < tokens.length; i += 1) {
+                    if (tokens[i].startsWith("/by")) {
+
+                    }
+                }
+                tasks[taskCount] = new Event(input);
+                taskCount += 1;
+                printMessage("New Task: " + input);
+                prompt();
+            }
+            case "deadline" -> {
+                tasks[taskCount] = new Deadline(input);
+                taskCount += 1;
+                printMessage("New Task: " + input);
+                prompt();
+            }
             case "bye" -> printMessage("See you next time, goodbye!");
             case "list" -> {
                 printMessage(list());
@@ -35,43 +56,31 @@ public class Cherry {
                     int taskNumber = Integer.parseInt(tokens[1]);
                     if (0 < taskNumber && taskNumber < 101) {
                         tasks[taskNumber - 1].markTask();
-                        printMessage("Good job! I've marked this task as done:\n["
-                                + tasks[taskNumber - 1].getStatusIcon() + "] "
-                                + tasks[taskNumber - 1].description);
-                        prompt();
+                        printMessage("Good job! I've marked this task as done:\n"
+                                + tasks[taskNumber - 1].toString());
                     } else {
                         printMessage("This task doesn't exist! Did you mean something else?");
-                        prompt();
                     }
                 } else {
                     printMessage("Please let me know which task you are referring to :)");
-                    prompt();
                 }
+                prompt();
             }
             case "unmark" -> {
                 if (tokens.length > 1) {
                     int taskNumber = Integer.parseInt(tokens[1]);
                     if (0 < taskNumber && taskNumber < 101) {
                         tasks[taskNumber - 1].unmarkTask();
-                        printMessage("Alright, I've unmarked this task:\n["
-                                + tasks[taskNumber - 1].getStatusIcon() + "] "
-                                + tasks[taskNumber - 1].description);
-                        prompt();
+                        printMessage("Alright, I've unmarked this task:\n" + tasks[taskNumber - 1].toString());
                     } else {
                         printMessage("This task doesn't exist! Did you mean something else?");
-                        prompt();
                     }
                 } else {
                     printMessage("Please let me know which task you are referring to :)");
-                    prompt();
                 }
-            }
-            default -> {
-                tasks[taskCount] = new Task(input);
-                taskCount += 1;
-                printMessage("New Task: " + input);
                 prompt();
             }
+
         }
     }
 

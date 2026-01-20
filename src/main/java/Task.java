@@ -7,8 +7,8 @@ public class Task {
         this.isDone = false;
     }
 
-    public String getStatusIcon() {
-        return (isDone ? "✔" : " "); // mark done task with ✔
+    protected String getStatusIcon() {
+        return (isDone ? "[✔]" : "[ ]"); // mark done task with ✔
     }
 
     public void markTask() {
@@ -17,5 +17,10 @@ public class Task {
 
     public void unmarkTask() {
         this.isDone = false;
+    }
+
+    @Override
+    public String toString() {
+        return  "(T) " + (isDone ? "[✔]" : "[ ]") + this.description;
     }
 }
