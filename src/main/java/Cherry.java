@@ -11,7 +11,7 @@ public class Cherry {
         }
         StringBuilder list = new StringBuilder();
         for (int i = 0; i < taskCount; i += 1) {
-            list.append((i + 1)).append(". ").append(tasks[i].toString()).append("\n");
+            list.append((i + 1)).append(". ").append(tasks[i].toString()).append('\n');
         }
         return list.toString();
     }
@@ -24,26 +24,21 @@ public class Cherry {
 
         switch (command) {
             case "todo" -> {
-                tasks[taskCount] = new Task(input);
+                tasks[taskCount] = new Task(tokens);
                 taskCount += 1;
-                printMessage("New Task: " + input);
+                printMessage("New Task: " + tasks[taskCount - 1].toString());
                 prompt();
             }
             case "event" -> {
-                for (int i = 0; i < tokens.length; i += 1) {
-                    if (tokens[i].startsWith("/by")) {
-
-                    }
-                }
-                tasks[taskCount] = new Event(input);
+                tasks[taskCount] = new Event(tokens);
                 taskCount += 1;
-                printMessage("New Task: " + input);
+                printMessage("New Task: " + tasks[taskCount - 1].toString());
                 prompt();
             }
             case "deadline" -> {
-                tasks[taskCount] = new Deadline(input);
+                tasks[taskCount] = new Deadline(tokens);
                 taskCount += 1;
-                printMessage("New Task: " + input);
+                printMessage("New Task: " + tasks[taskCount - 1].toString());
                 prompt();
             }
             case "bye" -> printMessage("See you next time, goodbye!");
@@ -59,10 +54,10 @@ public class Cherry {
                         printMessage("Good job! I've marked this task as done:\n"
                                 + tasks[taskNumber - 1].toString());
                     } else {
-                        printMessage("This task doesn't exist! Did you mean something else?");
+                        throw new IllegalArgumentException("Task number does not exist");
                     }
                 } else {
-                    printMessage("Please let me know which task you are referring to :)");
+                    throw new IllegalArgumentException("Missing task number");
                 }
                 prompt();
             }
@@ -73,10 +68,10 @@ public class Cherry {
                         tasks[taskNumber - 1].unmarkTask();
                         printMessage("Alright, I've unmarked this task:\n" + tasks[taskNumber - 1].toString());
                     } else {
-                        printMessage("This task doesn't exist! Did you mean something else?");
+                        throw new IllegalArgumentException("Missing task number");
                     }
                 } else {
-                    printMessage("Please let me know which task you are referring to :)");
+                    throw new IllegalArgumentException("Missing task number");
                 }
                 prompt();
             }

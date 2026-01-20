@@ -1,14 +1,18 @@
 public class Task {
-    protected String description;
+    protected StringBuilder description;
     protected boolean isDone;
 
-    public Task(String description) {
-        this.description = description;
+    public Task() {
+        this.description = new StringBuilder();
         this.isDone = false;
     }
 
-    protected String getStatusIcon() {
-        return (isDone ? "[✔]" : "[ ]"); // mark done task with ✔
+    public Task(String[] tokens) {
+        this.description = new StringBuilder();
+        for (int i = 1; i < tokens.length; i += 1){
+            description.append(" ").append(tokens[i]);
+        }
+        this.isDone = false;
     }
 
     public void markTask() {
@@ -21,6 +25,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return  "(T) " + (isDone ? "[✔]" : "[ ]") + this.description;
+        return  "(T) " + (isDone ? "[✔]" : "[ ]")
+                + this.description.toString();
     }
 }
