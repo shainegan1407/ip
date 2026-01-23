@@ -1,7 +1,7 @@
 public class Deadline extends Task{
     protected StringBuilder deadline;
 
-    public Deadline(String[] tokens) {
+    public Deadline(String[] tokens) throws CherryException {
         super();
         deadline = new StringBuilder();
 
@@ -13,7 +13,7 @@ public class Deadline extends Task{
             }
         }
         if ((byIndex == -1) || (byIndex + 1 >= tokens.length)) {
-            throw new IllegalArgumentException("Incorrect command");
+            throw new CherryException("Please include the deadline using /by");
         }
 
         // initialise description

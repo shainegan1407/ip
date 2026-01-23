@@ -2,7 +2,7 @@ public class Event extends Task {
     protected StringBuilder start;
     protected StringBuilder end;
 
-    public Event(String[] tokens) {
+    public Event(String[] tokens) throws CherryException {
         super();
         start = new StringBuilder();
         end  = new StringBuilder();
@@ -24,7 +24,7 @@ public class Event extends Task {
         }
 
         if ((fromIndex == -1) || (toIndex == -1) || (fromIndex >= toIndex)) {
-            throw new IllegalArgumentException("Incorrect command");
+            throw new CherryException("Please include the event timing using /from and /to");
         }
 
         // initialise description

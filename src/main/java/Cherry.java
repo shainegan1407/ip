@@ -22,60 +22,66 @@ public class Cherry {
         String[] tokens = input.split(" ", 50);
         String command = tokens[0];
 
-        switch (command) {
-            case "todo" -> {
-                tasks[taskCount] = new Task(tokens);
-                taskCount += 1;
-                printMessage("New Task: " + tasks[taskCount - 1].toString());
-                prompt();
-            }
-            case "event" -> {
-                tasks[taskCount] = new Event(tokens);
-                taskCount += 1;
-                printMessage("New Task: " + tasks[taskCount - 1].toString());
-                prompt();
-            }
-            case "deadline" -> {
-                tasks[taskCount] = new Deadline(tokens);
-                taskCount += 1;
-                printMessage("New Task: " + tasks[taskCount - 1].toString());
-                prompt();
-            }
-            case "bye" -> printMessage("See you next time, goodbye!");
-            case "list" -> {
-                printMessage(list());
-                prompt();
-            }
-            case "mark" -> {
-                if (tokens.length > 1) {
-                    int taskNumber = Integer.parseInt(tokens[1]);
-                    if (0 < taskNumber && taskNumber < 101) {
-                        tasks[taskNumber - 1].markTask();
-                        printMessage("Good job! I've marked this task as done:\n"
-                                + tasks[taskNumber - 1].toString());
-                    } else {
-                        throw new IllegalArgumentException("Task number does not exist");
-                    }
-                } else {
-                    throw new IllegalArgumentException("Missing task number");
+        try {
+            switch (command) {
+                case "todo" -> {
+                    tasks[taskCount] = new Task(tokens);
+                    taskCount += 1;
+                    printMessage("New Task: " + tasks[taskCount - 1].toString());
+                    prompt();
                 }
-                prompt();
-            }
-            case "unmark" -> {
-                if (tokens.length > 1) {
-                    int taskNumber = Integer.parseInt(tokens[1]);
-                    if (0 < taskNumber && taskNumber < 101) {
-                        tasks[taskNumber - 1].unmarkTask();
-                        printMessage("Alright, I've unmarked this task:\n" + tasks[taskNumber - 1].toString());
-                    } else {
-                        throw new IllegalArgumentException("Missing task number");
-                    }
-                } else {
-                    throw new IllegalArgumentException("Missing task number");
+                case "event" -> {
+                    tasks[taskCount] = new Event(tokens);
+                    taskCount += 1;
+                    printMessage("New Task: " + tasks[taskCount - 1].toString());
+                    prompt();
                 }
-                prompt();
-            }
+                case "deadline" -> {
+                    tasks[taskCount] = new Deadline(tokens);
+                    taskCount += 1;
+                    printMessage("New Task: " + tasks[taskCount - 1].toString());
+                    prompt();
+                }
+                case "bye" -> printMessage("See you next time, goodbye!");
+                case "list" -> {
+                    printMessage(list());
+                    prompt();
+                }
+                case "mark" -> {
+                    if (tokens.length > 1) {
+                        int taskNumber = Integer.parseInt(tokens[1]);
+                        if (0 < taskNumber && taskNumber < 101) {
+                            tasks[taskNumber - 1].markTask();
+                            printMessage("Good job! I've marked this task as done:\n"
+                                    + tasks[taskNumber - 1].toString());
+                        } else {
+                            throw new CherryException("This task does not exist, did you mean something else?");
+                        }
+                    } else {
+                        throw new CherryException("You will need to specify the task number");
+                    }
+                    prompt();
+                }
+                case "unmark" -> {
+                    if (tokens.length > 1) {
+                        int taskNumber = Integer.parseInt(tokens[1]);
+                        if (0 < taskNumber && taskNumber < 101) {
+                            tasks[taskNumber - 1].unmarkTask();
+                            printMessage("Alright, I've unmarked this task:\n" + tasks[taskNumber - 1].toString());
+                        } else {
+                            throw new CherryException("This task does not exist, did you mean something else?");
+                        }
+                    } else {
+                        throw new CherryException("You will need to specify the task number");
+                    }
+                    prompt();
+                }
+                default -> throw new CherryException("I'm sorry, the task cafe can't help you with this yet");
 
+            }
+        } catch (CherryException e) {
+            printMessage(e.getMessage());
+            prompt();
         }
     }
 

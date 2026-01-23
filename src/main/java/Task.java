@@ -7,7 +7,10 @@ public class Task {
         this.isDone = false;
     }
 
-    public Task(String[] tokens) {
+    public Task(String[] tokens) throws CherryException {
+        if (tokens.length <= 1) {
+            throw new CherryException("Please let me know the task description");
+        }
         this.description = new StringBuilder();
         for (int i = 1; i < tokens.length; i += 1){
             description.append(" ").append(tokens[i]);
