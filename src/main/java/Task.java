@@ -1,34 +1,44 @@
 public class Task {
-    protected StringBuilder description;
-    protected boolean isDone;
+    public String description;
+    public boolean isDone;
 
-    public Task() {
-        this.description = new StringBuilder();
+    /**
+     * Creates a to-do task with the given description, unmarked.
+     */
+    public Task(String description) {
+        this.description = description;
         this.isDone = false;
     }
 
-    public Task(String[] tokens) throws CherryException {
-        if (tokens.length <= 1) {
-            throw new CherryException("Please let me know the task description");
-        }
-        this.description = new StringBuilder();
-        for (int i = 1; i < tokens.length; i += 1){
-            description.append(" ").append(tokens[i]);
-        }
-        this.isDone = false;
+    /**
+     * Creates a to-do task with the given description and done status.
+     */
+    public Task(String description,boolean isDone) {
+        this.description = description;
+        this.isDone = isDone;
     }
 
+    /**
+     * Marks the task.
+     */
     public void markTask() {
         this.isDone = true;
     }
 
+    /**
+     * Unmarks the task.
+     */
     public void unmarkTask() {
         this.isDone = false;
     }
 
+    /**
+     * Returns the following to-do string representation:
+     * (T) | description | done status
+     */
     @Override
     public String toString() {
-        return  "(T) " + (isDone ? "[✔]" : "[ ]")
-                + this.description.toString();
+        return  "(T) | " + (isDone ? "[✔] |" : "[ ] | ")
+                + this.description;
     }
 }
