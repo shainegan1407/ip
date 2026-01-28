@@ -1,54 +1,34 @@
 public class Event extends Task {
-    protected StringBuilder start;
-    protected StringBuilder end;
+    protected String start;
+    protected String end;
 
-    public Event(String[] tokens) throws CherryException {
-        super();
-        start = new StringBuilder();
-        end  = new StringBuilder();
-
-        // parse for /from
-        int fromIndex = -1;
-        for (int j = 0; j < tokens.length; j += 1) {
-            if ("/from".equals(tokens[j])) {
-                fromIndex = j;
-            }
-        }
-
-        // parse for /to
-        int toIndex = -1;
-        for (int j = 0; j < tokens.length; j += 1) {
-            if ("/to".equals(tokens[j])) {
-                toIndex = j;
-            }
-        }
-
-        if ((fromIndex == -1) || (toIndex == -1) || (fromIndex >= toIndex)) {
-            throw new CherryException("Please include the event timing using /from and /to");
-        }
-
-        // initialise description
-        for (int j = 1; j < fromIndex; j += 1) {
-            description.append(" ").append(tokens[j]);
-        }
-
-        // initialise start
-        for (int j = fromIndex + 1; j < toIndex; j += 1) {
-            start.append(" ").append(tokens[j]);
-        }
-
-        // initialise end
-        for (int j = toIndex + 1; j < tokens.length; j += 1) {
-            end.append(" ").append(tokens[j]);
-        }
+    /**
+     * Creates an event task with the given description, start and end, unmarked.
+     */
+    public Event(String description, String start, String end) {
+        super(description);
+        this.start = start;
+        this.end  = end;
     }
 
+    /**
+     * Creates a deadline task with the given description, done status, start and end.
+     */
+    public Event(String description, boolean isDone, String start, String end) {
+        super(description, isDone);
+        this.start = start;
+        this.end  = end;
+    }
+
+    /**
+     * Returns the following event string representation:
+     * (E) | description | done status | start | end
+     */
     @Override
     public String toString() {
-        return  "(E) " + (isDone ? "[✔]" : "[ ]")
-                + this.description.toString()
-                + " (from:" + start.toString()
-                + " to:" + end.toString()
-                + ")";
+        return  "(E) | " + (isDone ? "[✔] |" : "[ ] | ")
+                + this.description
+                + " | from:" + this.start
+                + " | to:" + this.end;
     }
 }
