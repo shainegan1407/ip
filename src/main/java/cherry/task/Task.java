@@ -39,6 +39,14 @@ public class Task {
     }
 
     /**
+     * Checks if the task description contains the specified keyword.
+     * Returns true if description contains keyword, and false otherwise.
+     */
+    public boolean hasKeyword(String keyword) {
+        return this.description.contains(keyword.trim());
+    }
+
+    /**
      * Returns the following to-do string representation:
      * (T) | description | done status
      */

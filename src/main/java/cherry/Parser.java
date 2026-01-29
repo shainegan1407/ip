@@ -7,6 +7,7 @@ import cherry.command.AddCommand;
 import cherry.command.ByeCommand;
 import cherry.command.Command;
 import cherry.command.DeleteCommand;
+import cherry.command.FindCommand;
 import cherry.command.ListCommand;
 import cherry.command.MarkCommand;
 import cherry.command.UnmarkCommand;
@@ -131,6 +132,13 @@ public class Parser {
         }
         case "list" -> {
             return new ListCommand();
+        }
+        case "find" -> {
+            if (tokens.length < 2) {
+                throw new CherryException("No keyword description");
+            }
+            String keyword = getTargetTokens(tokens, 0, tokens.length);
+            return new FindCommand(keyword);
         }
         case "todo" -> {
             if (tokens.length < 2) {
