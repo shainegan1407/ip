@@ -75,6 +75,22 @@ public class Ui {
     }
 
     /**
+     * Prints the task list with matching keywords.
+     */
+    public void printMatchingList(TaskList tasks) throws CherryException {
+        if (tasks.getTaskCount() == 0) {
+            printMessage("No tasks match your description :(");
+            return;
+        }
+
+        StringBuilder list = new StringBuilder("Here are the related tasks in your list:\n");
+        for (int i = 0; i < tasks.getTaskCount(); i += 1) {
+            list.append((i + 1)).append(". ").append(tasks.getTask(i + 1).toString()).append('\n');
+        }
+        printMessage(list.toString().trim());
+    }
+
+    /**
      * Shows a task was added.
      */
     public void printTaskAdded(Task task, int totalTasks) {
