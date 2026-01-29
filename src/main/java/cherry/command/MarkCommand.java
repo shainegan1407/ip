@@ -1,6 +1,15 @@
+package cherry.command;
+
 import java.io.IOException;
 
-public class MarkCommand extends Command{
+import cherry.CherryException;
+import cherry.Storage;
+import cherry.Ui;
+import cherry.task.Task;
+import cherry.task.TaskList;
+
+
+public class MarkCommand extends Command {
     private final int taskIndex;
 
     public MarkCommand(int taskIndex) {

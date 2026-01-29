@@ -1,3 +1,5 @@
+package cherry.task;
+
 public class Event extends Task {
     protected String start;
     protected String end;
@@ -8,7 +10,7 @@ public class Event extends Task {
     public Event(String description, String start, String end) {
         super(description);
         this.start = start;
-        this.end  = end;
+        this.end = end;
     }
 
     /**
@@ -17,7 +19,7 @@ public class Event extends Task {
     public Event(String description, boolean isDone, String start, String end) {
         super(description, isDone);
         this.start = start;
-        this.end  = end;
+        this.end = end;
     }
 
     /**
@@ -26,7 +28,7 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return  "(E) | " + (isDone ? "[✔] |" : "[ ] | ")
+        return "(E) | " + (isDone ? "[✔] |" : "[ ] | ")
                 + this.description
                 + " | from:" + this.start
                 + " | to:" + this.end;

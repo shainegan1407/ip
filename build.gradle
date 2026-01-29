@@ -28,12 +28,20 @@ test {
 }
 
 application {
-    mainClass.set("seedu.duke.Duke")
+    mainClass.set("cherry.Cherry")
 }
 
 shadowJar {
-    archiveBaseName = "duke"
+    archiveBaseName = "cherry"
     archiveClassifier = null
+}
+
+plugins {
+    id 'checkstyle'
+}
+
+checkstyle {
+    toolVersion = '11.0.0'
 }
 
 run{

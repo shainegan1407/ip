@@ -1,17 +1,26 @@
+package cherry.command;
+
 import java.io.IOException;
 
-public class DeleteCommand extends Command {
+import cherry.CherryException;
+import cherry.Storage;
+import cherry.Ui;
+import cherry.task.Task;
+import cherry.task.TaskList;
+
+
+public class UnmarkCommand extends Command {
     private final int taskIndex;
 
-    public DeleteCommand(int taskIndex) {
+    public UnmarkCommand(int taskIndex) {
         this.taskIndex = taskIndex;
     }
 
     public void execute(TaskList tasks, Ui ui, Storage storage)
             throws CherryException, IOException {
         Task task = tasks.getTask(taskIndex);
-        tasks.deleteTask(taskIndex -1);
-        ui.printTaskDeleted(task, tasks.getTaskCount());
+        tasks.unmarkTask(taskIndex);
+        ui.printTaskUnmarked(task);
         storage.save(tasks.getTasks());
     }
 }

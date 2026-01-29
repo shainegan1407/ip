@@ -1,4 +1,6 @@
-public class Deadline extends Task{
+package cherry.task;
+
+public class Deadline extends Task {
     protected String deadline;
 
     /**
@@ -23,7 +25,7 @@ public class Deadline extends Task{
      */
     @Override
     public String toString() {
-        return  "(D) | " + (isDone ? "[✔] |" : "[ ] | ")
+        return "(D) | " + (isDone ? "[✔] |" : "[ ] | ")
                 + this.description
                 + " | by:" + this.deadline;
     }

@@ -1,4 +1,12 @@
+package cherry.command;
+
 import java.io.IOException;
+
+import cherry.Storage;
+import cherry.Ui;
+import cherry.task.Task;
+import cherry.task.TaskList;
+
 
 public class AddCommand extends Command {
     private final Task task;

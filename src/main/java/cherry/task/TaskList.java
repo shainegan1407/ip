@@ -1,7 +1,12 @@
+package cherry.task;
+
 import java.util.ArrayList;
 
+import cherry.CherryException;
+
+
 public class TaskList {
-    ArrayList<Task> tasks;
+    private final ArrayList<Task> tasks;
 
     /**
      * Creates an empty task list.
@@ -37,7 +42,7 @@ public class TaskList {
     /**
      * Adds a task to the bottom of the list.
      */
-    public void addTask(Task task){
+    public void addTask(Task task) {
         tasks.add(task);
     }
 
@@ -66,7 +71,7 @@ public class TaskList {
     /**
      * Returns the size of the task list.
      */
-    public int getTaskCount(){
+    public int getTaskCount() {
         return tasks.size();
     }
 }

@@ -1,6 +1,8 @@
+package cherry.task;
+
 public class Task {
-    public String description;
-    public boolean isDone;
+    protected final String description;
+    protected boolean isDone;
 
     /**
      * Creates a to-do task with the given description, unmarked.
@@ -13,7 +15,7 @@ public class Task {
     /**
      * Creates a to-do task with the given description and done status.
      */
-    public Task(String description,boolean isDone) {
+    public Task(String description, boolean isDone) {
         this.description = description;
         this.isDone = isDone;
     }
@@ -38,7 +40,7 @@ public class Task {
      */
     @Override
     public String toString() {
-        return  "(T) | " + (isDone ? "[✔] |" : "[ ] | ")
+        return "(T) | " + (isDone ? "[✔] |" : "[ ] | ")
                 + this.description;
     }
 }

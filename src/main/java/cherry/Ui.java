@@ -1,8 +1,14 @@
+package cherry;
+
 import java.util.Scanner;
 
+import cherry.task.Task;
+import cherry.task.TaskList;
+
+
 public class Ui {
-    private final Scanner scanner;
     private static final String LINE = "____________________________________________________________";
+    private final Scanner scanner;
 
     public Ui() {
         this.scanner = new Scanner(System.in);
@@ -22,11 +28,11 @@ public class Ui {
      */
     public void printWelcome() {
         String logo = """
-                  ___I_
-                 /\\-_--\\
-                /  \\_-__\\
-         (•◡•)  |[]| [] |
-        """;
+                      ___I_
+                     /\\-_--\\
+                    /  \\_-__\\
+             (•◡•)  |[]| [] |
+            """;
         printMessage("Welcome to the task cafe!\n" + logo + "I'm cherry, how can I help you?");
     }
 
@@ -73,7 +79,8 @@ public class Ui {
      * Shows a task was added.
      */
     public void printTaskAdded(Task task, int totalTasks) {
-        printMessage("New Task: " + task.toString() + "\nNow you have " + totalTasks + " tasks in the list.");
+        printMessage("New cherry.task.Task: " + task.toString()
+                + "\nNow you have " + totalTasks + " tasks in the list.");
     }
 
     /**

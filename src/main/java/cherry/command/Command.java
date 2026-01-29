@@ -1,4 +1,11 @@
+package cherry.command;
+
 import java.io.IOException;
+
+import cherry.CherryException;
+import cherry.Storage;
+import cherry.Ui;
+import cherry.task.TaskList;
 
 public abstract class Command {
     protected boolean isExit = false;

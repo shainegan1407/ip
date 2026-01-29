@@ -1,5 +1,13 @@
-import java.io.*;
+package cherry;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import cherry.task.Task;
 
 public class Storage {
     private final String path;
@@ -30,7 +38,7 @@ public class Storage {
         return tasks;
     }
 
-    public void save(ArrayList<Task> tasks) throws IOException{
+    public void save(ArrayList<Task> tasks) throws IOException {
         File file = new File(path);
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {
