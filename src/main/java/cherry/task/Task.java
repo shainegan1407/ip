@@ -1,5 +1,9 @@
 package cherry.task;
 
+/**
+ * Represents a generic task which has a description and done status.
+ * Serves as a base class for specific task types like {@link Deadline} and {@link Event}.
+ */
 public class Task {
     protected final String description;
     protected boolean isDone;

@@ -5,7 +5,9 @@ import java.util.Scanner;
 import cherry.task.Task;
 import cherry.task.TaskList;
 
-
+/**
+ * Handles user interaction and displaying messages.
+ */
 public class Ui {
     private static final String LINE = "____________________________________________________________";
     private final Scanner scanner;

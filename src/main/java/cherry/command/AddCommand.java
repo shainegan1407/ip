@@ -7,14 +7,23 @@ import cherry.Ui;
 import cherry.task.Task;
 import cherry.task.TaskList;
 
-
+/**
+ * Represents a command which adds a new task to the task list.
+ */
 public class AddCommand extends Command {
     private final Task task;
 
+    /**
+     * Creates an AddCommand with the specified task.
+     */
     public AddCommand(Task task) {
         this.task = task;
     }
 
+    /**
+     * Executes the add command by adding the task to the task list,
+     * printing confirmation to the user, and saving the updated list.
+     */
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         tasks.addTask(task);
         ui.printTaskAdded(task, tasks.getTaskCount());

@@ -14,7 +14,9 @@ import cherry.task.Deadline;
 import cherry.task.Event;
 import cherry.task.Task;
 
-
+/**
+ * Parses user input into its respective {@link Command} objects.
+ */
 public class Parser {
 
     /**

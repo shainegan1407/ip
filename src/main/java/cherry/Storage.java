@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 import cherry.task.Task;
 
+/**
+ * Handles reading to and writing from the storage file on hard disk.
+ */
 public class Storage {
     private final String path;
 

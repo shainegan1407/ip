@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import cherry.CherryException;
 
+/**
+ * Represents a collection of tasks.
+ * Provides methods to add, delete, mark, and unmark tasks.
+ */
 public class TaskList {
     private final ArrayList<Task> tasks;
 
