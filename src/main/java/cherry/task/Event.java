@@ -28,7 +28,7 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "(E) | " + (isDone ? "[✔] | " : "[ ] | ")
+        return "(E) " + (isDone ? "[✔] | " : "[ ] | ")
                 + this.description
                 + " (from: " + this.start
                 + " to: " + this.end

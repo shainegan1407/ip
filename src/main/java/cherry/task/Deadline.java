@@ -9,6 +9,7 @@ public class Deadline extends Task {
 
     /**
      * Creates a deadline task with the given description and deadline, unmarked.
+     * Deadline given in the form: yyyy-MM-dd (E.g. 2025-12-31).
      */
     public Deadline(String description, LocalDate deadline) {
         super(description);
@@ -17,6 +18,7 @@ public class Deadline extends Task {
 
     /**
      * Creates a deadline task with the given description, done status and deadline.
+     * Deadline given in the form: yyyy-MM-dd (E.g. 2025-12-31).
      */
     public Deadline(String description, boolean isDone, LocalDate deadline) {
         super(description, isDone);
@@ -29,7 +31,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "(D) | " + (isDone ? "[✔] |" : "[ ] | ")
+        return "(D) " + (isDone ? "[✔] |" : "[ ] | ")
                 + this.description
                 + " (by: " + this.deadline.format(formatter)
                 + ")";
