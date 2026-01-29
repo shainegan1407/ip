@@ -9,7 +9,7 @@ import cherry.task.TaskList;
  */
 public class ByeCommand extends Command {
     /**
-     * Executes the bye command by printing a goodbye message
+     * Executes the bye command by printing a goodbye message.
      * and setting the exit status to true.
      */
     public void execute(TaskList tasks, Ui ui, Storage storage) {
