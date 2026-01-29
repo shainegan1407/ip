@@ -4,7 +4,7 @@ public class Cherry {
     private final Storage storage;
     private final Ui ui;
     private final Parser parser;
-    private TaskList tasks;
+    private final TaskList tasks;
 
 
     public Cherry(String filePath) {
