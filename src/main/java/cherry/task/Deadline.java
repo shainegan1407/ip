@@ -3,6 +3,10 @@ package cherry.task;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents a task with a deadline.
+ * Extends {@link Task} by including a {@link java.time.LocalDate} deadline.
+ */
 public class Deadline extends Task {
     protected LocalDate deadline;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");

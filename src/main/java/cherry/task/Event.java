@@ -1,5 +1,9 @@
 package cherry.task;
 
+/**
+ * Represents a task that occurs at a specific time or date.
+ * Extends {@link Task} by including the event's start and end information.
+ */
 public class Event extends Task {
     protected String start;
     protected String end;
