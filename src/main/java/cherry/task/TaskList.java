@@ -15,7 +15,7 @@ public class TaskList {
      * Creates task list from an existing list of tasks.
      */
     public TaskList() {
-        this.tasks = new ArrayList<Task>();
+        this.tasks = new ArrayList<>();
     }
 
     /**
