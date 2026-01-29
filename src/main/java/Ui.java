@@ -65,8 +65,7 @@ public class Ui {
         for (int i = 0; i < tasks.getTaskCount(); i += 1) {
             list.append((i + 1)).append(". ").append(tasks.getTask(i + 1).toString()).append('\n');
         }
-
-        printMessage(list.toString());
+        printMessage(list.toString().trim());
     }
 
     /**
@@ -95,6 +94,6 @@ public class Ui {
      */
     public void printTaskDeleted(Task task, int totalTasks) {
         printMessage("Alright, I've deleted this task:\n" + task.toString()
-                + "\nNow you have " + totalTasks + " tasks in the list");
+                + "\nNow you have " + totalTasks + " tasks in the list.");
     }
 }

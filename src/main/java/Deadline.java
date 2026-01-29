@@ -1,10 +1,14 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Deadline extends Task{
-    protected String deadline;
+    protected LocalDate deadline;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
 
     /**
      * Creates a deadline task with the given description and deadline, unmarked.
      */
-    public Deadline(String description, String deadline) {
+    public Deadline(String description, LocalDate deadline) {
         super(description);
         this.deadline = deadline;
     }
@@ -12,7 +16,7 @@ public class Deadline extends Task{
     /**
      * Creates a deadline task with the given description, done status and deadline.
      */
-    public Deadline(String description, boolean isDone, String deadline) {
+    public Deadline(String description, boolean isDone, LocalDate deadline) {
         super(description, isDone);
         this.deadline = deadline;
     }
@@ -23,8 +27,16 @@ public class Deadline extends Task{
      */
     @Override
     public String toString() {
-        return  "(D) | " + (isDone ? "[✔] |" : "[ ] | ")
+        return  "(D) | " + (isDone ? "[✔] | " : "[ ] | ")
                 + this.description
-                + " | by:" + this.deadline;
+                + " (by: " + this.deadline.format(formatter)
+                + ")";
+    }
+
+    @Override
+    public String toSaveFormat() {
+        return  "(D) | " + (isDone ? "[✔] | " : "[ ] | ")
+                + this.description
+                + " | " + this.deadline.toString();
     }
 }

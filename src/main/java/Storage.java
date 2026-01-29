@@ -1,4 +1,10 @@
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import java.util.ArrayList;
 
 public class Storage {
@@ -8,7 +14,11 @@ public class Storage {
         this.path = path;
     }
 
-    public ArrayList<Task> load() throws IOException {
+    /**
+     * Loads tasks from existing data file, skips corrupted lines.
+     * If data file does not exist, returns an empty list.
+     */
+    public ArrayList<Task> load() {
         File file = new File(path);
         ArrayList<Task> tasks = new ArrayList<>();
 
@@ -18,29 +28,46 @@ public class Storage {
 
         // load existing list
         Parser parser = new Parser();
-        BufferedReader fileReader = new BufferedReader(new FileReader(file));
-        String line;
-        while ((line = fileReader.readLine()) != null) {
-            Task task = parser.getTaskFromString(line);
-            if (task != null) {
-                tasks.add(task);
+        try (BufferedReader fileReader = new BufferedReader(new FileReader(file))) {
+            String line;
+
+            while ((line = fileReader.readLine()) != null) {
+                try {
+                    Task task = parser.getTaskFromString(line);
+                    tasks.add(task);
+                } catch (CherryException e) {
+                    System.out.println("Skipped corrupted line: " + e.getMessage());
+                }
             }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found at " + path);
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
         }
-        fileReader.close();
+
         return tasks;
     }
 
+    /**
+     * Saves tasks to data file.
+     * If file does not exist, creates a new directory.
+     */
     public void save(ArrayList<Task> tasks) throws IOException{
         File file = new File(path);
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {
-            parentDir.mkdirs();
+            if (!parentDir.mkdirs()) {
+                throw new IOException("Failed to create directory: " + parentDir.getPath());
+            }
         }
-        FileWriter fileWriter = new FileWriter(path);
-        for (Task task : tasks) {
-            fileWriter.write(task.toString() + System.lineSeparator());
+
+        try (FileWriter fileWriter = new FileWriter(path)) {
+            for (Task task : tasks) {
+                fileWriter.write(task.toSaveFormat() + System.lineSeparator());
+            }
+        } catch (IOException e) {
+            throw new IOException("Failed to save tasks: " + e.getMessage());
         }
-        fileWriter.close();
     }
 }
 

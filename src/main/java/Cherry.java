@@ -11,12 +11,7 @@ public class Cherry {
         ui = new Ui();
         storage = new Storage(filePath);
         parser = new Parser();
-        try {
-            tasks = new TaskList(storage.load());
-        } catch (IOException e) {
-            ui.printError("Error loading tasks");
-            tasks = new TaskList();
-        }
+        tasks = new TaskList(storage.load());
     }
 
     public void run() {
