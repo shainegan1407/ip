@@ -4,15 +4,14 @@ import java.util.ArrayList;
 
 import cherry.CherryException;
 
-
 public class TaskList {
     private final ArrayList<Task> tasks;
 
     /**
-     * Creates an empty task list.
+     * Creates task list from an existing list of tasks.
      */
     public TaskList() {
-        this.tasks = new ArrayList<>();
+        this.tasks = new ArrayList<Task>();
     }
 
     /**

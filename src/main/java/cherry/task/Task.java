@@ -40,7 +40,14 @@ public class Task {
      */
     @Override
     public String toString() {
-        return "(T) | " + (isDone ? "[✔] |" : "[ ] | ")
+        return "(T) | " + (isDone ? "[✔] | " : "[ ] | ")
                 + this.description;
+    }
+
+    /**
+     * Returns the following to-do string representation for saving in the data file.
+     */
+    public String toSaveFormat() {
+        return this.toString();
     }
 }
