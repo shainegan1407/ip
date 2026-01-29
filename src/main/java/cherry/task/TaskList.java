@@ -8,13 +8,6 @@ public class TaskList {
     ArrayList<Task> tasks;
 
     /**
-     * Creates an empty task list.
-     */
-    public TaskList() {
-        this.tasks = new ArrayList<>();
-    }
-
-    /**
      * Creates task list from an existing list of tasks.
      */
     public TaskList(ArrayList<Task> tasks) {
