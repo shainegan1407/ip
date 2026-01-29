@@ -1,17 +1,22 @@
+package cherry.command;
+
+import cherry.*;
+import cherry.task.*;
+
 import java.io.IOException;
 
-public class MarkCommand extends Command{
+public class DeleteCommand extends Command {
     private final int taskIndex;
 
-    public MarkCommand(int taskIndex) {
+    public DeleteCommand(int taskIndex) {
         this.taskIndex = taskIndex;
     }
 
     public void execute(TaskList tasks, Ui ui, Storage storage)
             throws CherryException, IOException {
         Task task = tasks.getTask(taskIndex);
-        tasks.markTask(taskIndex);
-        ui.printTaskMarked(task);
+        tasks.deleteTask(taskIndex -1);
+        ui.printTaskDeleted(task, tasks.getTaskCount());
         storage.save(tasks.getTasks());
     }
 }

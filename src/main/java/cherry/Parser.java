@@ -1,3 +1,8 @@
+package cherry;
+
+import cherry.command.*;
+import cherry.task.*;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -58,8 +63,8 @@ public class Parser {
     }
 
     /**
-     * Extracts task data from a given line to return the respective Task object.
-     * Used in loading tasks from storage, to convert each line into a Task object.
+     * Extracts task data from a given line to return the respective cherry.task.Task object.
+     * Used in loading tasks from storage, to convert each line into a cherry.task.Task object.
      */
     public Task getTaskFromString(String input) throws CherryException {
         String[] tokens = input.split("\\|", 50);
@@ -99,7 +104,7 @@ public class Parser {
     }
 
         /**
-         * Extracts command data from the given input to return the respective Command object.
+         * Extracts command data from the given input to return the respective cherry.command.Command object.
          */
     public Command parse(String input) throws CherryException {
         String[] tokens = input.split(" ", 50);

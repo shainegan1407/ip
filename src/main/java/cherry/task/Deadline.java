@@ -1,7 +1,9 @@
+package cherry.task;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Deadline extends Task{
+public class Deadline extends Task {
     protected LocalDate deadline;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
 

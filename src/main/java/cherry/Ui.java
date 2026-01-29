@@ -1,3 +1,7 @@
+package cherry;
+
+import cherry.task.*;
+
 import java.util.Scanner;
 
 public class Ui {
@@ -72,7 +76,7 @@ public class Ui {
      * Shows a task was added.
      */
     public void printTaskAdded(Task task, int totalTasks) {
-        printMessage("New Task: " + task.toString() + "\nNow you have " + totalTasks + " tasks in the list.");
+        printMessage("New cherry.task.Task: " + task.toString() + "\nNow you have " + totalTasks + " tasks in the list.");
     }
 
     /**

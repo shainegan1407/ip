@@ -1,3 +1,8 @@
+package cherry;
+
+import cherry.command.*;
+import cherry.task.*;
+
 import java.io.IOException;
 
 public class Cherry {
@@ -27,7 +32,7 @@ public class Cherry {
             } catch (CherryException e) {
                 ui.printError(e.getMessage());
             } catch (IOException e) {
-                ui.printError("Storage error! " + e.getMessage());
+                ui.printError("cherry.Storage error! " + e.getMessage());
             }
         }
     }

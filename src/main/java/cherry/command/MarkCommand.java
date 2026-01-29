@@ -1,17 +1,22 @@
+package cherry.command;
+
+import cherry.*;
+import cherry.task.*;
+
 import java.io.IOException;
 
-public class UnmarkCommand extends Command{
+public class MarkCommand extends Command {
     private final int taskIndex;
 
-    public UnmarkCommand(int taskIndex) {
+    public MarkCommand(int taskIndex) {
         this.taskIndex = taskIndex;
     }
 
     public void execute(TaskList tasks, Ui ui, Storage storage)
             throws CherryException, IOException {
         Task task = tasks.getTask(taskIndex);
-        tasks.unmarkTask(taskIndex);
-        ui.printTaskUnmarked(task);
+        tasks.markTask(taskIndex);
+        ui.printTaskMarked(task);
         storage.save(tasks.getTasks());
     }
 }

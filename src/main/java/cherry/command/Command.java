@@ -1,3 +1,8 @@
+package cherry.command;
+
+import cherry.*;
+import cherry.task.*;
+
 import java.io.IOException;
 
 public abstract class Command {
