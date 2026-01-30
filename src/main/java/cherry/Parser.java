@@ -85,24 +85,20 @@ public class Parser {
         String description = tokens[2].trim();
 
         switch (taskType) {
-        case "(T)" -> {
+        case "(T)":
             return new Task(description, isDone);
-        }
-        case "(D)" -> {
+        case "(D)":
             if (tokens.length < 4) {
                 throw new CherryException("Invalid deadline format");
             }
             return new Deadline(description, isDone, getDate(tokens[3].trim()));
-        }
-        case "(E)" -> {
+        case "(E)":
             if (tokens.length < 5) {
                 throw new CherryException("Invalid event format");
             }
             return new Event(description, isDone, tokens[3].trim(), tokens[4].trim());
-        }
-        default -> {
+        default:
             throw new CherryException("Unknown task type: " + taskType);
-        }
         }
     }
 
@@ -127,27 +123,23 @@ public class Parser {
         }
 
         switch (tokens[0].toLowerCase()) {
-        case "bye" -> {
+        case "bye":
             return new ByeCommand();
-        }
-        case "list" -> {
+        case "list":
             return new ListCommand();
-        }
-        case "find" -> {
+        case "find":
             if (tokens.length < 2) {
                 throw new CherryException("No keyword description");
             }
             String keyword = getTargetTokens(tokens, 0, tokens.length);
             return new FindCommand(keyword);
-        }
-        case "todo" -> {
+        case "todo":
             if (tokens.length < 2) {
                 throw new CherryException("No task description");
             }
             String description = getTargetTokens(tokens, 0, tokens.length);
             return new AddCommand(new Task(description));
-        }
-        case "event" -> {
+        case "event":
             int fromIndex = getIndex(tokens, "/from");
             int toIndex = getIndex(tokens, "/to");
             if (fromIndex <= 1 || toIndex <= 1) {
@@ -156,33 +148,27 @@ public class Parser {
             if (fromIndex >= toIndex) {
                 throw new CherryException("/from must come before /to");
             }
-            String description = getTargetTokens(tokens, 0, fromIndex);
+            String eventDescription = getTargetTokens(tokens, 0, fromIndex);
             String from = getTargetTokens(tokens, fromIndex, toIndex);
             String to = getTargetTokens(tokens, toIndex, tokens.length);
-            return new AddCommand(new Event(description, from, to));
-        }
-        case "deadline" -> {
+            return new AddCommand(new Event(eventDescription, from, to));
+        case "deadline":
             int byIndex = getIndex(tokens, "/by");
             if (byIndex <= 1) {
                 throw new CherryException("Please give a deadline description");
             }
-            String description = getTargetTokens(tokens, 0, byIndex);
+            String deadlineDescription = getTargetTokens(tokens, 0, byIndex);
             String deadlineString = getTargetTokens(tokens, byIndex, tokens.length);
             LocalDate deadline = getDate(deadlineString);
-            return new AddCommand(new Deadline(description, deadline));
-        }
-        case "mark" -> {
+            return new AddCommand(new Deadline(deadlineDescription, deadline));
+        case "mark":
             return new MarkCommand(getTaskNumber(tokens));
-        }
-        case "unmark" -> {
+        case "unmark":
             return new UnmarkCommand(getTaskNumber(tokens));
-        }
-        case "delete" -> {
+        case "delete":
             return new DeleteCommand(getTaskNumber(tokens));
-        }
-        default -> {
+        default:
             throw new CherryException("Sorry, the task cafe can't help with that yet!");
-        }
         }
     }
 }
