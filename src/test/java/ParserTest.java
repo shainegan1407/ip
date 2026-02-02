@@ -219,7 +219,7 @@ public class ParserTest {
         LocalDate date = parser.getDate("2024-12-31");
         assertEquals(LocalDate.of(2024, 12, 31), date);
         date = parser.getDate("2024-02-29");
-        assertEquals(LocalDate.of(2024, 12, 31), date);
+        assertEquals(LocalDate.of(2024, 02, 29), date);
     }
 
     @Test
