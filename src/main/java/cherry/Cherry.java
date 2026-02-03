@@ -7,7 +7,7 @@ import cherry.task.TaskList;
 
 
 /**
- * The main class of the Cherry application.
+ * Represents the main class of the Cherry application.
  * Initialises all components and runs the main program loop.
  */
 public class Cherry {
