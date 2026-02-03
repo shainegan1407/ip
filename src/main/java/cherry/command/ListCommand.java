@@ -14,6 +14,7 @@ public class ListCommand extends Command {
      */
     public void execute(TaskList tasks, Ui ui, Storage storage)
             throws CherryException {
+        responseMessage = ui.formatList(tasks);
         ui.printList(tasks);
     }
 }

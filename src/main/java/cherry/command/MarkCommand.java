@@ -29,6 +29,7 @@ public class MarkCommand extends Command {
             throws CherryException, IOException {
         Task task = tasks.getTask(taskIndex);
         tasks.markTask(taskIndex);
+        responseMessage = ui.formatTaskMarked(task);
         ui.printTaskMarked(task);
         storage.save(tasks.getTasks());
     }

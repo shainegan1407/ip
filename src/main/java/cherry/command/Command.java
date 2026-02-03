@@ -13,6 +13,7 @@ import cherry.task.TaskList;
  */
 public abstract class Command {
     protected boolean isExit = false;
+    protected String responseMessage = "";
 
     /**
      * Returns whether this command signals program exit.
@@ -26,4 +27,8 @@ public abstract class Command {
      */
     public abstract void execute(TaskList tasks, Ui ui, Storage storage)
             throws CherryException, IOException;
+    @Override
+    public String toString() {
+        return responseMessage;
+    }
 }

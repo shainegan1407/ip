@@ -28,6 +28,7 @@ public class DeleteCommand extends Command {
             throws CherryException, IOException {
         Task task = tasks.getTask(taskIndex);
         tasks.deleteTask(taskIndex - 1);
+        responseMessage = ui.formatTaskDeleted(task, tasks.getTaskCount());
         ui.printTaskDeleted(task, tasks.getTaskCount());
         storage.save(tasks.getTasks());
     }

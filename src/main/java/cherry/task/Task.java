@@ -52,7 +52,7 @@ public class Task {
      */
     @Override
     public String toString() {
-        return "(T) " + (isDone ? "[✔] | " : "[ ] | ")
+        return "(T) | " + (isDone ? "[✔] | " : "[ ] | ")
                 + this.description;
     }
 

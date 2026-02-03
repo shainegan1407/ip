@@ -28,6 +28,7 @@ public class UnmarkCommand extends Command {
             throws CherryException, IOException {
         Task task = tasks.getTask(taskIndex);
         tasks.unmarkTask(taskIndex);
+        responseMessage = ui.formatTaskUnmarked(task);
         ui.printTaskUnmarked(task);
         storage.save(tasks.getTasks());
     }

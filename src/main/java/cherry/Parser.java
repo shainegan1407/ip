@@ -80,6 +80,9 @@ public class Parser {
      */
     public Task getTaskFromString(String input) throws CherryException {
         String[] tokens = input.split("\\|", 50);
+        if (tokens.length < 3) {
+            throw new CherryException("Invalid task format in data file: " + input);
+        }
         String taskType = tokens[0].trim();
         boolean isDone = tokens[1].trim().equals("[✔]");
         String description = tokens[2].trim();

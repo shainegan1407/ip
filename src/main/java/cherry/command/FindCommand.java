@@ -32,6 +32,7 @@ public class FindCommand extends Command {
                 newList.addTask(task);
             }
         }
+        responseMessage = ui.formatMatchingList(tasks);
         ui.printMatchingList(newList);
     }
 }
