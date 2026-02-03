@@ -1,40 +1,54 @@
+@font-face {
+    -fx-font-family: 'San Francisco';
+    -fx-font-weight: normal;
+    -fx-font-style: normal;
+    src: url('../fonts/SF-Pro-Display-Regular.otf');
+}
+
+@font-face {
+    -fx-font-family: 'San Francisco';
+    -fx-font-weight: bold;
+    -fx-font-style: normal;
+    src: url('../fonts/SF-Pro-Display-Bold.otf');
+}
+
+@font-face {
+    -fx-font-family: 'San Francisco';
+    -fx-font-weight: normal;
+    -fx-font-style: italic;
+    src: url('../fonts/SF-Pro-Display-RegularItalic.otf');
+}
+
+@font-face {
+    -fx-font-family: 'San Francisco';
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    src: url('../fonts/SF-Pro-Display-BoldItalic.otf');
+}
+
 .label {
-    -fx-background-color: linear-gradient(to bottom right, #00ffbf, #00ddff);
-    -fx-border-color: #d55e00 #009e73 #cc79a7 #0072b2;
+    -fx-background-color: #dd7e68;
+    -fx-font: 16px "San Francisco", "Helvetica";
+    -fx-text-fill: #f9f9f9;
+    -fx-border-color: transparent;
     -fx-border-width: 2px;
     -fx-background-radius: 1em 1em 0 1em;
     -fx-border-radius: 1em 1em 0 1em;
-    -fx-padding: 6px;
+    -fx-padding: 10px;
     -fx-border-insets: 0px 7px 0px 7px;
     -fx-background-insets: 0px 7px 0px 7px;
+    -fx-effect: dropshadow(gaussian, rgba(99, 99, 99, 0.2), 8, 0, 0, 2);
 }
 
-.reply-label {
-    -fx-background-radius: 1em 1em 1em 0;
+.reply-label, .add-label, .marked-label, .delete-label {
+    -fx-background-color: #f4cfc6;
+    -fx-text-fill: #3b3a3a;
+    -fx-background-radius: 0em 1em 1em 1em;
     -fx-border-radius: 1em 1em 1em 0;
 }
 
-.add-label {
-    -fx-background-color: yellow;
-}
-
-.marked-label {
-    -fx-background-color: palegreen;
-}
-
-.delete-label {
-    -fx-background-color: lightpink;
-}
-
 #displayPicture {
-    /* Shadow effect on image. */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 5, 5);
-
-    /* Change size of image. */
-    -fx-scale-x: 1;
-    -fx-scale-y: 1;
-
-    /* Rotate image clockwise by degrees. */
+    -fx-scale-x: 1;  /* Adjust this to scale image */
+    -fx-scale-y: 1;  /* Adjust this to scale image */
     -fx-rotate: 0;
 }
-

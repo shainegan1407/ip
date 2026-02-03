@@ -10,9 +10,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 /**
  * Represents a dialog box consisting of an ImageView to represent the speaker's face
@@ -38,7 +41,31 @@ public class DialogBox extends HBox {
         }
 
         dialog.setText(text);
+        dialog.getStyleClass().add("label");
         displayPicture.setImage(img);
+        clipImageToCircle();
+        applyImageShadow();
+    }
+    /**
+     * Clips the display picture to a circular shape.
+     */
+    private void clipImageToCircle() {
+        // Get the center point (assuming square image)
+        double radius = displayPicture.getFitWidth() / 2;
+        Circle clip = new Circle(radius, radius, radius);
+        displayPicture.setClip(clip);
+    }
+
+    /**
+     * Applies drop shadow effect to the image container.
+     */
+    private void applyImageShadow() {
+        DropShadow shadow = new DropShadow();
+        shadow.setColor(Color.rgb(99, 99, 99, 0.2));
+        shadow.setRadius(8);
+        shadow.setOffsetX(0);
+        shadow.setOffsetY(2);
+        this.setEffect(shadow);
     }
 
     /**
