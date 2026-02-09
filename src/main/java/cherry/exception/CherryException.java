@@ -1,4 +1,4 @@
-package cherry;
+package cherry.exception;
 
 /**
  * Represents exceptions specific to the Cherry application.

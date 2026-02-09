@@ -1,8 +1,8 @@
 package cherry.command;
 
-import cherry.Storage;
-import cherry.Ui;
+import cherry.storage.Storage;
 import cherry.task.TaskList;
+import cherry.ui.Ui;
 
 /**
  * Represents a command to exit the application.

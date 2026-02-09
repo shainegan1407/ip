@@ -1,7 +1,8 @@
-package cherry;
+package cherry.ui;
 
 import java.util.Scanner;
 
+import cherry.exception.CherryException;
 import cherry.task.Task;
 import cherry.task.TaskList;
 

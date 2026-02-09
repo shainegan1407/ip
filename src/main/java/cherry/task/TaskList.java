@@ -2,7 +2,7 @@ package cherry.task;
 
 import java.util.ArrayList;
 
-import cherry.CherryException;
+import cherry.exception.CherryException;
 
 /**
  * Represents a collection of tasks.

@@ -2,10 +2,10 @@ package cherry.command;
 
 import java.io.IOException;
 
-import cherry.Storage;
-import cherry.Ui;
+import cherry.storage.Storage;
 import cherry.task.Task;
 import cherry.task.TaskList;
+import cherry.ui.Ui;
 
 /**
  * Represents a command which adds a new task to the task list.

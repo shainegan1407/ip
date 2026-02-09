@@ -1,5 +1,6 @@
-package cherry;
+package cherry.gui;
 
+import cherry.Cherry;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;

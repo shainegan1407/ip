@@ -1,4 +1,4 @@
-package cherry;
+package cherry.gui;
 
 import javafx.application.Application;
 

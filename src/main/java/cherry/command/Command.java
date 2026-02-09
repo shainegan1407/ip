@@ -2,10 +2,10 @@ package cherry.command;
 
 import java.io.IOException;
 
-import cherry.CherryException;
-import cherry.Storage;
-import cherry.Ui;
+import cherry.exception.CherryException;
+import cherry.storage.Storage;
 import cherry.task.TaskList;
+import cherry.ui.Ui;
 
 /**
  * Represents an abstract command that can be executed.

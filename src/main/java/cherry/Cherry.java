@@ -3,7 +3,11 @@ package cherry;
 import java.io.IOException;
 
 import cherry.command.Command;
+import cherry.exception.CherryException;
+import cherry.parser.Parser;
+import cherry.storage.Storage;
 import cherry.task.TaskList;
+import cherry.ui.Ui;
 
 
 /**

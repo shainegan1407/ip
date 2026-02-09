@@ -1,4 +1,4 @@
-package cherry;
+package cherry.gui;
 
 import java.io.IOException;
 import java.util.Collections;

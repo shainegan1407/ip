@@ -1,7 +1,8 @@
-package cherry;
+package cherry.gui;
 
 import java.io.IOException;
 
+import cherry.Cherry;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

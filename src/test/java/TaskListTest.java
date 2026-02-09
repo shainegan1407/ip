@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
-import cherry.CherryException;
+import cherry.exception.CherryException;
 import cherry.task.Task;
 import cherry.task.TaskList;
 

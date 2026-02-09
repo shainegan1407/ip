@@ -1,4 +1,4 @@
-package cherry;
+package cherry.storage;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import cherry.exception.CherryException;
+import cherry.parser.Parser;
 import cherry.task.Task;
 
 /**

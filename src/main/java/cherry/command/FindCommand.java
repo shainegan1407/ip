@@ -1,10 +1,10 @@
 package cherry.command;
 
-import cherry.CherryException;
-import cherry.Storage;
-import cherry.Ui;
+import cherry.exception.CherryException;
+import cherry.storage.Storage;
 import cherry.task.Task;
 import cherry.task.TaskList;
+import cherry.ui.Ui;
 
 /**
  * Represents a command which finds all tasks containing

@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import cherry.CherryException;
-import cherry.Parser;
+import cherry.exception.CherryException;
+import cherry.parser.Parser;
 import cherry.command.AddCommand;
 import cherry.command.ByeCommand;
 import cherry.command.Command;
