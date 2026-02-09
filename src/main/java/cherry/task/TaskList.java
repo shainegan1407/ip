@@ -30,9 +30,12 @@ public class TaskList {
      */
     public Task getTask(int taskNumber) throws CherryException {
         if (taskNumber <= 0 || taskNumber > tasks.size()) {
-            throw new CherryException("This task does not exist, did you mean something else?");
+            throw new CherryException("This task does not exist");
         }
-        return tasks.get(taskNumber - 1);
+
+        Task task = tasks.get(taskNumber - 1);
+        assert task != null : "Retrieved task should not be null";
+        return task;
     }
 
     /**
@@ -46,13 +49,16 @@ public class TaskList {
      * Adds a task to the bottom of the list.
      */
     public void addTask(Task task) {
+        assert task != null : "Task to add should not be null";
         tasks.add(task);
+        assert tasks.contains(task) : "Task should be in list after adding";
     }
 
     /**
      * Deletes a task at the given task number (1-based for user).
      */
     public void deleteTask(int taskNumber) {
+        assert taskNumber >= 0 && taskNumber < tasks.size() : "Task index should be valid";
         tasks.remove(taskNumber);
     }
 

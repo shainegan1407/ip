@@ -17,6 +17,7 @@ public class AddCommand extends Command {
      * Creates an AddCommand with the specified task.
      */
     public AddCommand(Task task) {
+        assert task != null : "Task to add should not be null";
         this.task = task;
     }
 
@@ -25,6 +26,9 @@ public class AddCommand extends Command {
      * printing confirmation to the user, and saving the updated list.
      */
     public void execute(TaskList tasks, Ui ui, Storage storage) {
+        assert tasks != null : "TaskList should not be null";
+        assert ui != null : "Ui should not be null";
+        assert storage != null : "Storage should not be null";
         tasks.addTask(task);
         responseMessage = ui.formatTaskAdded(task, tasks.getTaskCount());
         ui.printTaskAdded(task, tasks.getTaskCount());

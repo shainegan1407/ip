@@ -12,6 +12,8 @@ public class Task {
      * Creates a to-do task with the given description, unmarked.
      */
     public Task(String description) {
+        assert description != null : "Description should not be null";
+        assert !description.trim().isEmpty() : "Description should not be empty";
         this.description = description;
         this.isDone = false;
     }
@@ -28,7 +30,8 @@ public class Task {
      * Marks the task.
      */
     public void markTask() {
-        this.isDone = true;
+        assert !isDone : "Task should not already be marked when marking";
+        isDone = true;
     }
 
     /**

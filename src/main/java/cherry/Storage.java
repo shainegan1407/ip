@@ -25,6 +25,7 @@ public class Storage {
      * If data file does not exist, returns an empty list.
      */
     public ArrayList<Task> load() throws IOException {
+        assert path != null : "File path should be initialised";
         File file = new File(path);
         ArrayList<Task> tasks = new ArrayList<>();
 
@@ -58,6 +59,8 @@ public class Storage {
      * If file does not exist, creates a new directory.
      */
     public void save(ArrayList<Task> tasks) throws IOException {
+        assert tasks != null : "Tasks list to save should not be null";
+        assert path != null : "File path should be initialized";
         File file = new File(path);
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {
