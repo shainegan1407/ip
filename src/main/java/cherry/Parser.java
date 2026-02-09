@@ -2,6 +2,7 @@ package cherry;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 
 import cherry.command.AddCommand;
 import cherry.command.ByeCommand;
@@ -19,7 +20,7 @@ import cherry.task.Task;
  * Parses user input into its respective {@link Command} objects.
  */
 public class Parser {
-
+    private static final int MAX_TASKS = 100;
     /**
      * Returns index of the target string in the tokens array.
      */
@@ -41,11 +42,11 @@ public class Parser {
         }
 
         try {
-            int index = Integer.parseInt(tokens[1]);
-            if (index < 1 || index > 100) {
+            int taskIndex = Integer.parseInt(tokens[1]);
+            if (taskIndex < 1 || taskIndex > MAX_TASKS) {
                 throw new CherryException("Invalid task number");
             }
-            return index;
+            return taskIndex;
         } catch (NumberFormatException e) {
             throw new CherryException("Invalid task number");
         }
@@ -54,24 +55,11 @@ public class Parser {
     /**
      * Extracts the target string found between two specified indexes of the tokens array.
      */
-    private String getTargetTokens(String[] tokens, int i, int j) throws CherryException {
-        if (i < 0 || j < 0 || i >= tokens.length || j > tokens.length) {
-            throw new CherryException("Index out of bounds");
+    private String getTargetTokens(String[] tokens, int startTokensIndex, int endTokensIndex) throws CherryException {
+        if (startTokensIndex < 0 || endTokensIndex > tokens.length || startTokensIndex >= endTokensIndex) {
+            throw new CherryException("Invalid token range");
         }
-        if (i == j) {
-            return tokens[i];
-        }
-        StringBuilder targetTokens = new StringBuilder();
-        if (i < j) {
-            for (int k = i + 1; k < j; k += 1) {
-                targetTokens.append(" ").append(tokens[k]);
-            }
-        } else {
-            for (int k = j + 1; k < i; k += 1) {
-                targetTokens.append(" ").append(tokens[k]);
-            }
-        }
-        return targetTokens.toString();
+        return String.join(" ", Arrays.copyOfRange(tokens, startTokensIndex + 1, endTokensIndex));
     }
 
     /**
@@ -85,24 +73,24 @@ public class Parser {
         }
         String taskType = tokens[0].trim();
         boolean isDone = tokens[1].trim().equals("[✔]");
-        String description = tokens[2].trim();
+        String taskDescription = tokens[2].trim();
 
-        switch (taskType) {
+        return switch (taskType) {
         case "(T)":
-            return new Task(description, isDone);
+            yield new Task(taskDescription, isDone);
         case "(D)":
             if (tokens.length < 4) {
                 throw new CherryException("Invalid deadline format");
             }
-            return new Deadline(description, isDone, getDate(tokens[3].trim()));
+            yield new Deadline(taskDescription, isDone, getDate(tokens[3].trim()));
         case "(E)":
             if (tokens.length < 5) {
                 throw new CherryException("Invalid event format");
             }
-            return new Event(description, isDone, tokens[3].trim(), tokens[4].trim());
+            yield new Event(taskDescription, isDone, tokens[3].trim(), tokens[4].trim());
         default:
             throw new CherryException("Unknown task type: " + taskType);
-        }
+        };
     }
 
     /**
@@ -140,8 +128,8 @@ public class Parser {
             if (tokens.length < 2) {
                 throw new CherryException("No task description");
             }
-            String description = getTargetTokens(tokens, 0, tokens.length);
-            return new AddCommand(new Task(description));
+            String taskDescription = getTargetTokens(tokens, 0, tokens.length);
+            return new AddCommand(new Task(taskDescription));
         case "event":
             int fromIndex = getIndex(tokens, "/from");
             int toIndex = getIndex(tokens, "/to");
@@ -152,9 +140,9 @@ public class Parser {
                 throw new CherryException("/from must come before /to");
             }
             String eventDescription = getTargetTokens(tokens, 0, fromIndex);
-            String from = getTargetTokens(tokens, fromIndex, toIndex);
-            String to = getTargetTokens(tokens, toIndex, tokens.length);
-            return new AddCommand(new Event(eventDescription, from, to));
+            String fromDescription = getTargetTokens(tokens, fromIndex, toIndex);
+            String toDescription = getTargetTokens(tokens, toIndex, tokens.length);
+            return new AddCommand(new Event(eventDescription, fromDescription, toDescription));
         case "deadline":
             int byIndex = getIndex(tokens, "/by");
             if (byIndex <= 1) {
@@ -162,8 +150,8 @@ public class Parser {
             }
             String deadlineDescription = getTargetTokens(tokens, 0, byIndex);
             String deadlineString = getTargetTokens(tokens, byIndex, tokens.length);
-            LocalDate deadline = getDate(deadlineString);
-            return new AddCommand(new Deadline(deadlineDescription, deadline));
+            LocalDate deadlineLocalDate = getDate(deadlineString);
+            return new AddCommand(new Deadline(deadlineDescription, deadlineLocalDate));
         case "mark":
             return new MarkCommand(getTaskNumber(tokens));
         case "unmark":

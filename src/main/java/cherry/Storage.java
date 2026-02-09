@@ -14,10 +14,10 @@ import cherry.task.Task;
  * Handles reading to and writing from the storage file on hard disk.
  */
 public class Storage {
-    private final String path;
+    private final String filePath;
 
-    public Storage(String path) {
-        this.path = path;
+    public Storage(String filePath) {
+        this.filePath = filePath;
     }
 
     /**
@@ -25,7 +25,7 @@ public class Storage {
      * If data file does not exist, returns an empty list.
      */
     public ArrayList<Task> load() throws IOException {
-        File file = new File(path);
+        File file = new File(filePath);
         ArrayList<Task> tasks = new ArrayList<>();
 
         if (!file.exists()) {
@@ -46,7 +46,7 @@ public class Storage {
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("File not found at " + path);
+            System.out.println("File not found at " + filePath);
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
         }
@@ -58,7 +58,7 @@ public class Storage {
      * If file does not exist, creates a new directory.
      */
     public void save(ArrayList<Task> tasks) throws IOException {
-        File file = new File(path);
+        File file = new File(filePath);
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {
             if (!parentDir.mkdirs()) {
@@ -66,7 +66,7 @@ public class Storage {
             }
         }
 
-        try (FileWriter fileWriter = new FileWriter(path)) {
+        try (FileWriter fileWriter = new FileWriter(filePath)) {
             for (Task task : tasks) {
                 fileWriter.write(task.toSaveFormat() + System.lineSeparator());
             }

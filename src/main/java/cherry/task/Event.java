@@ -5,37 +5,37 @@ package cherry.task;
  * Extends {@link Task} by including the event's start and end information.
  */
 public class Event extends Task {
-    protected String start;
-    protected String end;
+    protected String eventStart;
+    protected String eventEnd;
 
     /**
      * Creates an event task with the given description, start and end, unmarked.
      */
-    public Event(String description, String start, String end) {
-        super(description);
-        this.start = start;
-        this.end = end;
+    public Event(String taskDescription, String eventStart, String eventEnd) {
+        super(taskDescription);
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
     }
 
     /**
      * Creates a deadline task with the given description, done status, start and end.
      */
-    public Event(String description, boolean isDone, String start, String end) {
-        super(description, isDone);
-        this.start = start;
-        this.end = end;
+    public Event(String taskDescription, boolean isDone, String eventStart, String eventEnd) {
+        super(taskDescription, isDone);
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
     }
 
     /**
      * Returns the following event string representation:
-     * (E) | description | done status | start | end
+     * (E) | taskDescription | done status | start | end
      */
     @Override
     public String toString() {
         return "(E) " + (isDone ? "[✔] | " : "[ ] | ")
-                + this.description
-                + " (from: " + this.start
-                + " to: " + this.end
+                + this.taskDescription
+                + " (from: " + this.eventStart
+                + " to: " + this.eventEnd
                 + ")";
     }
 
@@ -44,8 +44,8 @@ public class Event extends Task {
      */
     public String toSaveFormat() {
         return "(E) | " + (isDone ? "[✔] | " : "[ ] | ")
-                + this.description
-                + " | " + this.start
-                + " | " + this.end;
+                + this.taskDescription
+                + " | " + this.eventStart
+                + " | " + this.eventEnd;
     }
 }

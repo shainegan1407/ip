@@ -8,7 +8,7 @@ import cherry.task.TaskList;
 
 /**
  * Represents the main class of the Cherry application.
- * Initialises all components and runs the main program loop.
+ * Initializes all components and runs the main program loop.
  */
 public class Cherry {
     private final Storage storage;

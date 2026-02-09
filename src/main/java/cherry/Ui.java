@@ -67,12 +67,6 @@ public class Ui {
         printMessage(message);
     }
 
-    /**
-     * Formats an error message (GUI mode).
-     */
-    public String formatError(String message) {
-        return "Error: " + message;
-    }
 
     /**
      * Reads a command from the user (CLI mode only).
