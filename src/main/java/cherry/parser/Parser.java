@@ -8,6 +8,7 @@ import cherry.command.AddCommand;
 import cherry.command.ByeCommand;
 import cherry.command.Command;
 import cherry.command.DeleteCommand;
+import cherry.command.DuplicateCommand;
 import cherry.command.FindCommand;
 import cherry.command.ListCommand;
 import cherry.command.MarkCommand;
@@ -159,6 +160,8 @@ public class Parser {
             return new UnmarkCommand(getTaskNumber(tokens));
         case "delete":
             return new DeleteCommand(getTaskNumber(tokens));
+        case "duplicate":
+            return new DuplicateCommand(getTaskNumber(tokens));
         default:
             throw new CherryException("Sorry, the task cafe can't help with that yet!");
         }

@@ -43,7 +43,7 @@ test {
 }
 
 application {
-    mainClass.set("cherry.Launcher")
+    mainClass.set("cherry.gui.Launcher")
 }
 
 shadowJar {
