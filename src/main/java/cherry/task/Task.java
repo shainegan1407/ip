@@ -5,24 +5,24 @@ package cherry.task;
  * Serves as a base class for specific task types like {@link Deadline} and {@link Event}.
  */
 public class Task {
-    protected final String description;
+    protected final String taskDescription;
     protected boolean isDone;
 
     /**
      * Creates a to-do task with the given description, unmarked.
      */
-    public Task(String description) {
-        assert description != null : "Description should not be null";
-        assert !description.trim().isEmpty() : "Description should not be empty";
-        this.description = description;
+    public Task(String taskDescription) {
+        assert taskDescription != null : "Description should not be null";
+        assert !taskDescription.trim().isEmpty() : "Description should not be empty";
+        this.taskDescription = taskDescription;
         this.isDone = false;
     }
 
     /**
      * Creates a to-do task with the given description and done status.
      */
-    public Task(String description, boolean isDone) {
-        this.description = description;
+    public Task(String taskDescription, boolean isDone) {
+        this.taskDescription = taskDescription;
         this.isDone = isDone;
     }
 
@@ -46,7 +46,7 @@ public class Task {
      * Returns true if description contains keyword, and false otherwise.
      */
     public boolean hasKeyword(String keyword) {
-        return this.description.contains(keyword.trim());
+        return this.taskDescription.contains(keyword.trim());
     }
 
     /**
@@ -56,7 +56,7 @@ public class Task {
     @Override
     public String toString() {
         return "(T) | " + (isDone ? "[✔] | " : "[ ] | ")
-                + this.description;
+                + this.taskDescription;
     }
 
     /**
