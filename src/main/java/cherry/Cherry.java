@@ -27,6 +27,7 @@ public class Cherry {
     public Cherry() {
         this("./data/cherry.txt");
     }
+
     /**
      * Creates a new Cherry application using the given storage filepath.
      *
@@ -43,6 +44,14 @@ public class Cherry {
             tasks = new TaskList();
         }
     }
+
+    /**
+     * Returns the welcome message for opening the GUI.
+     */
+    public String getWelcomeMessage() {
+        return ui.formatWelcome();
+    }
+
     /**
      * Generates a response for the user's chat message.
      */
@@ -58,12 +67,14 @@ public class Cherry {
             return "Storage error! " + e.getMessage();
         }
     }
+
     /**
      * Gets the type of the last executed command.
      */
     public String getCommandType() {
         return commandType;
     }
+
     /**
      * Runs the main program loop.
      * Continuously reads user input, parses commands, executes them,

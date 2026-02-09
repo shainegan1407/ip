@@ -33,6 +33,8 @@ public class MainWindow extends AnchorPane {
     /** Injects the Cherry instance */
     public void setCherry(Cherry c) {
         cherry = c;
+        dialogContainer.getChildren().add(
+                DialogBox.getCherryDialog(cherry.getWelcomeMessage(), cherryImage) );
     }
 
     /**

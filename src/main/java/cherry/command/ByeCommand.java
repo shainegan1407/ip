@@ -3,6 +3,9 @@ package cherry.command;
 import cherry.storage.Storage;
 import cherry.task.TaskList;
 import cherry.ui.Ui;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.util.Duration;
 
 /**
  * Represents a command to exit the application.
@@ -16,6 +19,9 @@ public class ByeCommand extends Command {
         ui.printGoodbye();
         responseMessage = ui.formatGoodbye();
         isExit = true;
+        PauseTransition delay = new PauseTransition(Duration.seconds(2));
+        delay.setOnFinished(event -> Platform.exit());
+        delay.play();
     }
 }
 
