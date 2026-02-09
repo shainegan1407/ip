@@ -2,6 +2,7 @@ package cherry.task;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 /**
  * Represents a task with a deadline.
@@ -27,6 +28,13 @@ public class Deadline extends Task {
     public Deadline(String taskDescription, boolean isDone, LocalDate deadlineLocalDate) {
         super(taskDescription, isDone);
         this.deadlineLocalDate = deadlineLocalDate;
+    }
+    @Override
+    public void update(Map<String, String> fields) {
+        updateDescription(fields.get("desc"));
+        if (fields.containsKey("by")) {
+            this.deadlineLocalDate = LocalDate.parse(fields.get("by"));
+        }
     }
 
     /**

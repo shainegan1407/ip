@@ -1,11 +1,13 @@
 package cherry.task;
 
+import java.util.Map;
+
 /**
  * Represents a generic task which has a description and done status.
  * Serves as a base class for specific task types like {@link Deadline} and {@link Event}.
  */
-public class Task {
-    protected final String taskDescription;
+public abstract class Task {
+    protected String taskDescription;
     protected boolean isDone;
 
     /**
@@ -65,4 +67,26 @@ public class Task {
     public String toSaveFormat() {
         return this.toString();
     }
+
+    /**
+     * Updates the task description.
+     */
+    public void updateDescription(String newTaskDescription) {
+        if (newTaskDescription != null && !newTaskDescription.isBlank()) {
+            this.taskDescription = newTaskDescription;
+        }
+    }
+
+    /**
+     * Updates the fields of this task according to the provided map.
+     * <p>
+     * Each subclass defines which keys are supported:
+     * <ul>
+     *   <li>{@link Todo}: "/desc"</li>
+     *   <li>{@link Deadline}: "/desc", "/by"</li>
+     *   <li>{@link Event}: "/desc", "/from", "/to"</li>
+     * </ul>
+     * </p>
+     */
+    public abstract void update(Map<String, String> fields);
 }

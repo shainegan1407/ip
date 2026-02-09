@@ -3,6 +3,8 @@ package cherry.parser;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import cherry.command.AddCommand;
 import cherry.command.ByeCommand;
@@ -13,10 +15,12 @@ import cherry.command.FindCommand;
 import cherry.command.ListCommand;
 import cherry.command.MarkCommand;
 import cherry.command.UnmarkCommand;
+import cherry.command.UpdateCommand;
 import cherry.exception.CherryException;
 import cherry.task.Deadline;
 import cherry.task.Event;
 import cherry.task.Task;
+import cherry.task.Todo;
 
 /**
  * Parses user input into its respective {@link Command} objects.
@@ -34,7 +38,17 @@ public class Parser {
         }
         throw new CherryException(text + " not found in command");
     }
-
+    /**
+     * Returns true if specified token is found within the tokens array.
+     */
+    private boolean hasToken(String[] tokens, String text) {
+        for (String token : tokens) {
+            if (text.equals(token)) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Returns the task number given in the tokens array.
      */
@@ -79,7 +93,7 @@ public class Parser {
 
         return switch (taskType) {
         case "(T)":
-            yield new Task(taskDescription, isDone);
+            yield new Todo(taskDescription, isDone);
         case "(D)":
             if (tokens.length < 4) {
                 throw new CherryException("Invalid deadline format");
@@ -131,7 +145,7 @@ public class Parser {
                 throw new CherryException("No task description");
             }
             String taskDescription = getTargetTokens(tokens, 0, tokens.length);
-            return new AddCommand(new Task(taskDescription));
+            return new AddCommand(new Todo(taskDescription));
         case "event":
             int fromIndex = getIndex(tokens, "/from");
             int toIndex = getIndex(tokens, "/to");
@@ -154,6 +168,25 @@ public class Parser {
             String deadlineString = getTargetTokens(tokens, byIndex, tokens.length);
             LocalDate deadlineLocalDate = getDate(deadlineString);
             return new AddCommand(new Deadline(deadlineDescription, deadlineLocalDate));
+        case "update":
+            int taskIndex = getTaskNumber(tokens);
+            Map<String, String> fields = new HashMap<>();
+            if (hasToken(tokens, "/desc")) {
+                fields.put("desc", getTargetTokens(tokens, getIndex(tokens, "/desc"), tokens.length));
+            }
+            if (hasToken(tokens, "/from")) {
+                fields.put("from", getTargetTokens(tokens, getIndex(tokens, "/from"), tokens.length));
+            }
+            if (hasToken(tokens, "/to")) {
+                fields.put("to", getTargetTokens(tokens, getIndex(tokens, "/to"), tokens.length));
+            }
+            if (hasToken(tokens, "/by")) {
+                fields.put("by", getTargetTokens(tokens, getIndex(tokens, "/by"), tokens.length));
+            }
+            if (fields.isEmpty()) {
+                throw new CherryException("No fields provided for update. Use /desc, /by, /from, or /to.");
+            }
+            return new UpdateCommand(taskIndex, fields);
         case "mark":
             return new MarkCommand(getTaskNumber(tokens));
         case "unmark":

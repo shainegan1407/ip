@@ -1,5 +1,7 @@
 package cherry.task;
 
+import java.util.Map;
+
 /**
  * Represents a task that occurs at a specific time or date.
  * Extends {@link Task} by including the event's start and end information.
@@ -24,6 +26,16 @@ public class Event extends Task {
         super(taskDescription, isDone);
         this.eventStart = eventStart;
         this.eventEnd = eventEnd;
+    }
+    @Override
+    public void update(Map<String, String> fields) {
+        updateDescription(fields.get("desc"));
+        if (fields.containsKey("from")) {
+            this.eventStart = fields.get("from");
+        }
+        if (fields.containsKey("to")) {
+            this.eventEnd = fields.get("to");
+        }
     }
 
     /**

@@ -31,20 +31,20 @@ public class Ui {
      * Prints the welcome message (CLI mode).
      */
     public void printWelcome() {
-        printMessage(formatWelcome());
-    }
-
-    /**
-     * Formats the welcome message (GUI mode).
-     */
-    public String formatWelcome() {
         String logo = """
                       ___I_
                      /\\-_--\\
                     /  \\_-__\\
              (•◡•)  |[]| [] |
             """;
-        return "Welcome to the task cafe!\n" + logo + "I'm cherry, how can I help you?";
+        printMessage("Welcome to the task cafe!\n" + logo + "I'm Cherry, how can I help you?");
+    }
+
+    /**
+     * Formats the welcome message (GUI mode).
+     */
+    public String formatWelcome() {
+        return "Welcome to the task cafe! I'm Cherry, how can I help you?";
     }
 
     /**
@@ -178,4 +178,20 @@ public class Ui {
         return "Alright, I've deleted this task:\n" + task.toString()
                 + "\nNow you have " + totalTasks + " tasks in the list.";
     }
+
+    /**
+     * Shows a task was edited (CLI mode).
+     */
+    public void printTaskUpdated(Task task) {
+        printMessage(formatTaskUpdated(task));
+    }
+
+    /**
+     * Formats a task edited message (GUI mode).
+     */
+    public String formatTaskUpdated(Task task) {
+        return "Ok! I've edited this task:\n" + task.toString();
+    }
+
 }
+
