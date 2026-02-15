@@ -43,7 +43,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "(D) " + (isDone ? "[✔] |" : "[ ] | ")
+        return "(D) " + (isDone ? "[X] |" : "[ ] | ")
                 + this.taskDescription
                 + " (by: " + this.deadlineLocalDate.format(formatter)
                 + ")";
@@ -51,7 +51,7 @@ public class Deadline extends Task {
 
     @Override
     public String toSaveFormat() {
-        return "(D) | " + (isDone ? "[✔] | " : "[ ] | ")
+        return "(D) | " + (isDone ? "[X] | " : "[ ] | ")
                 + this.taskDescription
                 + " | " + this.deadlineLocalDate.toString();
     }

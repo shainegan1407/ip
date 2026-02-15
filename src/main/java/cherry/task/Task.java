@@ -57,7 +57,7 @@ public abstract class Task {
      */
     @Override
     public String toString() {
-        return "(T) | " + (isDone ? "[✔] | " : "[ ] | ")
+        return "(T) | " + (isDone ? "[X] | " : "[ ] | ")
                 + this.taskDescription;
     }
 

@@ -44,7 +44,7 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "(E) " + (isDone ? "[✔] | " : "[ ] | ")
+        return "(E) " + (isDone ? "[X] | " : "[ ] | ")
                 + this.taskDescription
                 + " (from: " + this.eventStart
                 + " to: " + this.eventEnd
@@ -55,7 +55,7 @@ public class Event extends Task {
      * Returns the following to-do string representation for saving in the data file.
      */
     public String toSaveFormat() {
-        return "(E) | " + (isDone ? "[✔] | " : "[ ] | ")
+        return "(E) | " + (isDone ? "[X] | " : "[ ] | ")
                 + this.taskDescription
                 + " | " + this.eventStart
                 + " | " + this.eventEnd;

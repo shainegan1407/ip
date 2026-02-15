@@ -40,7 +40,7 @@
     -fx-effect: dropshadow(gaussian, rgba(99, 99, 99, 0.2), 8, 0, 0, 2);
 }
 
-.reply-label, .add-label, .marked-label, .delete-label {
+.reply-label {
     -fx-background-color: #f4cfc6;
     -fx-text-fill: #3b3a3a;
     -fx-background-radius: 0em 1em 1em 1em;
