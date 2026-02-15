@@ -46,7 +46,50 @@ public class Ui {
     public String formatWelcome() {
         return "Welcome to the task cafe! I'm Cherry, how can I help you?";
     }
+    /**
+     * Prints the help message (CLI mode).
+     */
+    public void printHelp() {
+        printMessage(formatHelp());
+    }
 
+    /**
+     * Formats the help message (GUI mode).
+     */
+    @SuppressWarnings("checkstyle:Regexp")
+    public String formatHelp() {
+        return """
+            Here are the all commands you can use:
+                        
+            Adding Tasks:
+            1. todo DESCRIPTION - Add a todo task
+              Example: todo read book
+
+            2. deadline DESCRIPTION /by DATE - Add a deadline 
+              Example: deadline return book /by 2025-12-31
+              Note: Dates must be in yyyy-MM-dd format
+            
+            3. event DESCRIPTION /from START /to END - Add an event
+              Example: event meeting /from 2pm /to 4pm
+            
+            Managing Tasks:
+            1. list - Show all tasks
+            2. find KEYWORD - Find tasks by keyword
+            3. mark INDEX - Mark task as done
+            4. unmark INDEX - Mark task as not done
+            5. update INDEX [/desc DESC] [/by DATE] [/from TIME] [/to TIME]
+              Example: update 1 /desc new description
+            6. duplicate INDEX - Duplicate a task
+            7. delete INDEX - Delete a task
+            Note: Task index starts from 1
+            
+            Other:
+            1. help - Show this help message
+            2. bye - Exit the application
+            
+            Tip: All commands are case-insensitive
+            """;
+    }
     /**
      * Prints a goodbye message (CLI mode).
      */

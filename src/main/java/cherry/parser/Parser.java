@@ -12,6 +12,7 @@ import cherry.command.Command;
 import cherry.command.DeleteCommand;
 import cherry.command.DuplicateCommand;
 import cherry.command.FindCommand;
+import cherry.command.HelpCommand;
 import cherry.command.ListCommand;
 import cherry.command.MarkCommand;
 import cherry.command.UnmarkCommand;
@@ -130,6 +131,8 @@ public class Parser {
         }
 
         switch (tokens[0].toLowerCase()) {
+        case "help":
+            return new HelpCommand();
         case "bye":
             return new ByeCommand();
         case "list":
