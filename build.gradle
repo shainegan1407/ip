@@ -2,7 +2,13 @@ plugins {
     id 'checkstyle'
     id 'java'
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+javafx {
+    version = "17.0.7"
+    modules = ['javafx.controls', 'javafx.fxml']
 }
 
 repositories {
@@ -43,6 +49,7 @@ test {
 }
 
 application {
+    mainModule = 'cherry'
     mainClass.set("cherry.gui.Launcher")
 }
 
