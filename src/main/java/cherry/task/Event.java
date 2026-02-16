@@ -39,6 +39,34 @@ public class Event extends Task {
     }
 
     /**
+     * Gets the event start time/date.
+     */
+    public String getFrom() {
+        return eventStart;
+    }
+
+    /**
+     * Gets the event end time/date.
+     */
+    public String getTo() {
+        return eventEnd;
+    }
+
+    /**
+     * Gets the status icon for menu display.
+     */
+    public String getStatusIcon() {
+        return isDone ? "✓" : "○";
+    }
+
+    /**
+     * Gets the formatted status string.
+     */
+    public String getFormattedStatus() {
+        return isDone ? "READY" : "PREPARING";
+    }
+
+    /**
      * Returns the following event string representation:
      * (E) | taskDescription | done status | start | end
      */

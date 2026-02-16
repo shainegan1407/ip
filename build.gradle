@@ -59,3 +59,7 @@ run{
     standardInput = System.in
     enableAssertions = true
 }
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}

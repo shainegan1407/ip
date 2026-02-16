@@ -7,8 +7,6 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import cherry.exception.CherryException;
-import cherry.parser.Parser;
 import cherry.command.AddCommand;
 import cherry.command.ByeCommand;
 import cherry.command.Command;
@@ -16,6 +14,8 @@ import cherry.command.DeleteCommand;
 import cherry.command.ListCommand;
 import cherry.command.MarkCommand;
 import cherry.command.UnmarkCommand;
+import cherry.exception.CherryException;
+import cherry.parser.Parser;
 
 
 public class ParserTest {

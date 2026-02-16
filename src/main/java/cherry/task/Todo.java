@@ -16,6 +16,20 @@ public class Todo extends Task {
         super(description, isDone);
     }
 
+    /**
+     * Gets the status icon for menu display.
+     */
+    public String getStatusIcon() {
+        return isDone ? "✓" : "○";
+    }
+
+    /**
+     * Gets the formatted status string.
+     */
+    public String getFormattedStatus() {
+        return isDone ? "READY" : "PREPARING";
+    }
+
     @Override
     public void update(Map<String, String> fields) {
         updateDescription(fields.get("desc"));

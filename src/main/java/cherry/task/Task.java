@@ -50,6 +50,33 @@ public abstract class Task {
     public boolean hasKeyword(String keyword) {
         return this.taskDescription.contains(keyword.trim());
     }
+    /**
+     * Gets the task description.
+     */
+    public String getDescription() {
+        return taskDescription;
+    }
+
+    /**
+     * Returns whether the task is done.
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /**
+     * Gets the status icon for menu display.
+     */
+    public String getStatusIcon() {
+        return isDone ? "✓" : "○";
+    }
+
+    /**
+     * Gets the formatted status string.
+     */
+    public String getFormattedStatus() {
+        return isDone ? "READY" : "PREPARING";
+    }
 
     /**
      * Returns the following to-do string representation:

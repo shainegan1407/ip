@@ -38,6 +38,34 @@ public class Deadline extends Task {
     }
 
     /**
+     * Gets the formatted deadline string.
+     */
+    public String getDeadline() {
+        return deadlineLocalDate.format(formatter);
+    }
+
+    /**
+     * Gets the deadline as LocalDate.
+     */
+    public LocalDate getDeadlineDate() {
+        return deadlineLocalDate;
+    }
+
+    /**
+     * Gets the status icon for menu display.
+     */
+    public String getStatusIcon() {
+        return isDone ? "✓" : "○";
+    }
+
+    /**
+     * Gets the formatted status string.
+     */
+    public String getFormattedStatus() {
+        return isDone ? "READY" : "PREPARING";
+    }
+
+    /**
      * Returns the following deadline string representation:
      * (D) | taskDescription | done status | deadline
      */

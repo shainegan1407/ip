@@ -34,7 +34,7 @@ public class MainWindow extends AnchorPane {
     public void setCherry(Cherry c) {
         cherry = c;
         dialogContainer.getChildren().add(
-                DialogBox.getCherryDialog(cherry.getWelcomeMessage(), cherryImage) );
+            DialogBox.getCherryDialog(cherry.getWelcomeMessage(), cherryImage));
     }
 
     /**
