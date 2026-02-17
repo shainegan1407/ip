@@ -48,7 +48,8 @@ public abstract class Task {
      * Returns true if description contains keyword, and false otherwise.
      */
     public boolean hasKeyword(String keyword) {
-        return this.taskDescription.contains(keyword.trim());
+        String normalizedKeyword = keyword.toLowerCase().trim();
+        return this.taskDescription.toLowerCase().contains(normalizedKeyword);
     }
     /**
      * Gets the task description.
