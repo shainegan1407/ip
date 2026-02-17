@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 /**
  * Controls the main GUI with cafe theme.
@@ -23,11 +24,12 @@ public class MainWindow extends AnchorPane {
     private Button sendButton;
 
     private Cherry cherry;
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.png"));
-    private Image cherryImage = new Image(this.getClass().getResourceAsStream("/images/Cherry.png"));
+    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.png"));
+    private final Image cherryImage = new Image(this.getClass().getResourceAsStream("/images/Cherry.png"));
 
     @FXML
     public void initialize() {
+        loadFonts();
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
         userInput.setPromptText("Type your order here... (e.g., 'todo buy coffee beans')");
     }
@@ -101,5 +103,15 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getCherryDialog(response, cherryImage, messageType)
         );
         userInput.clear();
+    }
+
+    /**
+     * Loads custom fonts programmatically so JavaFX CSS can resolve
+     * font-weight variants correctly. @font-face alone is not reliable in JavaFX.
+     */
+    private void loadFonts() {
+        Font.loadFont(getClass().getResourceAsStream("/fonts/Inter-Regular.ttf"), 16);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/Inter-Bold.ttf"), 16);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/Inter-Italic.ttf"), 16);
     }
 }

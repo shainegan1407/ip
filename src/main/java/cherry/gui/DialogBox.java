@@ -27,8 +27,7 @@ public class DialogBox extends HBox {
     @FXML
     private ImageView displayPicture;
 
-    // Stored so renderText() can re-render with correct styles when type is applied
-    private String rawText;
+    private final String rawText;
     private String messageType;
 
     /**

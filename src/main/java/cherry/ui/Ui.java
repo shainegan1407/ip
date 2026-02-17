@@ -13,12 +13,15 @@ import cherry.task.TaskList;
  * Supports both CLI (print methods) and GUI (format methods) modes.
  */
 public class Ui {
-    private static final String LINE = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
+    private static final String LINE =
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
+    private static final String DIVIDER = "┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈";
     private static final String COFFEE = "☕";
     private static final String MENU = "📋";
     private static final String CHECK = "✓";
     private static final String CIRCLE = "○";
     private static final String CROSS = "✗";
+
     private final Scanner scanner;
 
     public Ui() {
@@ -26,7 +29,7 @@ public class Ui {
     }
 
     /**
-     * Prints a message with lines above and below (CLI mode).
+     * Prints a message with separator lines above and below (CLI mode).
      */
     public void printMessage(String message) {
         System.out.println(LINE);
@@ -48,16 +51,6 @@ public class Ui {
     }
 
     /**
-     * Formats the welcome message (GUI mode).
-     */
-    public String formatWelcome() {
-        return COFFEE + " **Welcome to Cherry's Task Café!**" + COFFEE + "\n"
-                + "Your cozy corner for managing life's orders.\n"
-                + "\n"
-                + "Type 'help' to see the full menu " + MENU;
-    }
-
-    /**
      * Prints the help message (CLI mode).
      */
     public void printHelp() {
@@ -65,65 +58,10 @@ public class Ui {
     }
 
     /**
-     * Formats the help message (GUI mode).
-     */
-    @SuppressWarnings("checkstyle:Regexp")
-    public String formatHelp() {
-        return MENU + "**CHERRY'S CAFÉ MENU**" + MENU + "\n\n"
-                + "☕** PLACING ORDERS (Adding Tasks):**\n"
-                + "  1. todo DESCRIPTION\n"
-                + "     └─ Add a simple to-do task\n"
-                + "     └─ Example: todo buy coffee beans\n\n"
-                + "  2. deadline DESCRIPTION /by DATE\n"
-                + "     └─ Add a task with a deadline\n"
-                + "     └─ Example: deadline submit report /by 2025-12-31\n"
-                + "     └─ Note: Date format must be yyyy-MM-dd\n\n"
-                + "  3. event DESCRIPTION /from START /to END\n"
-                + "     └─ Add a scheduled event\n"
-                + "     └─ Example: event team meeting /from 2pm /to 4pm\n\n"
-                + "☕** MANAGING ORDERS (Task Management):**\n"
-                + "  4. list\n"
-                + "     └─ View your complete order list\n\n"
-                + "  5. find KEYWORD\n"
-                + "     └─ Search for specific orders\n"
-                + "     └─ Example: find meeting\n\n"
-                + "  6. mark INDEX\n"
-                + "     └─ Mark an order as complete\n"
-                + "     └─ Example: mark 2\n\n"
-                + "  7. unmark INDEX\n"
-                + "     └─ Mark an order as incomplete\n"
-                + "     └─ Example: unmark 2\n\n"
-                + "  8. update INDEX [/desc DESC] [/by DATE] [/from TIME] [/to TIME]\n"
-                + "     └─ Modify an existing order\n"
-                + "     └─ Example: update 1 /desc revised task name\n\n"
-                + "  9. duplicate INDEX\n"
-                + "     └─ Create a copy of an existing order\n"
-                + "     └─ Example: duplicate 3\n\n"
-                + "  10. delete INDEX\n"
-                + "     └─ Remove an order from your list\n"
-                + "     └─ Example: delete 1\n\n"
-                + "☕ **OTHER:**\n"
-                + "  • help - Show this menu\n"
-                + "  • bye - Close the café\n\n"
-                + "💡 **Tips:**\n"
-                + "  • All commands are case-insensitive\n"
-                + "  • Task numbering starts from 1\n"
-                + "  • Invalid dates will be caught\n";
-    }
-
-    /**
      * Prints a goodbye message (CLI mode).
      */
     public void printGoodbye() {
         printMessage(formatGoodbye());
-    }
-
-    /**
-     * Formats the goodbye message (GUI mode).
-     */
-    public String formatGoodbye() {
-        return COFFEE + " Thanks for visiting Cherry's Café! " + COFFEE + "\n"
-                + "Your orders are saved and ready for next time.\n";
     }
 
     /**
@@ -149,100 +87,153 @@ public class Ui {
     }
 
     /**
-     * Formats the task list (GUI mode) as a cafe order list.
-     */
-    public String formatList(TaskList tasks) throws CherryException {
-        if (tasks.getTaskCount() == 0) {
-            return MENU + " Your order list is empty!\n"
-                    + "Ready to place your first order?\n"
-                    + "Try: 'todo buy coffee beans' " + COFFEE;
-        }
-
-        StringBuilder menu = new StringBuilder();
-        menu.append(MENU).append("**YOUR CAFÉ ORDER LIST**").append(MENU).append("\n");
-
-        int readyCount = 0;
-        int preparingCount = 0;
-
-        for (int i = 0; i < tasks.getTaskCount(); i++) {
-            Task task = tasks.getTask(i + 1);
-            String orderNum = String.format("#%02d", i + 1);
-            String status = task.isDone() ? CHECK + " READY    " : CIRCLE + " PREPARING";
-
-            menu.append(orderNum).append(" │ ").append(status).append("\n");
-            menu.append("    ");
-
-            // Task description
-            if (task instanceof Deadline d) {
-                menu.append("**");
-                menu.append(d.getDescription());
-                menu.append("**");
-                menu.append("\n    ").append(COFFEE).append(" Due: ").append(d.getDeadline());
-            } else if (task instanceof Event e) {
-                menu.append(e.getDescription());
-                menu.append("\n    ").append(COFFEE).append(" ")
-                        .append(e.getFrom()).append(" → ").append(e.getTo());
-            } else {
-                menu.append(task.getDescription());
-            }
-
-            menu.append("\n");
-
-            if (i < tasks.getTaskCount() - 1) {
-                menu.append("┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n");
-            }
-
-            if (task.isDone()) {
-                readyCount++;
-            } else {
-                preparingCount++;
-            }
-        }
-
-        menu.append("\n");
-        menu.append(String.format("**Total: %d orders │ %s %d ready │ %s %d preparing**",
-                tasks.getTaskCount(), CHECK, readyCount, CIRCLE, preparingCount));
-
-        return menu.toString();
-    }
-
-    /**
-     * Prints the task list with matching keywords (CLI mode).
+     * Prints the matching task list (CLI mode).
      */
     public void printMatchingList(TaskList tasks) throws CherryException {
         printMessage(formatMatchingList(tasks));
     }
 
     /**
-     * Formats the task list with matching keywords (GUI mode).
+     *  Prints a task added confirmation (CLI mode).
+     */
+    public void printTaskAdded(Task task, int totalTasks) {
+        printMessage(formatTaskAdded(task, totalTasks));
+    }
+
+    /**
+     * Prints a task marked confirmation (CLI mode).
+     */
+    public void printTaskMarked(Task task) {
+        printMessage(formatTaskMarked(task));
+    }
+
+    /**
+     *  Prints a task unmarked confirmation (CLI mode).
+     */
+    public void printTaskUnmarked(Task task) {
+        printMessage(formatTaskUnmarked(task));
+    }
+
+    /**
+     * Prints a task deleted confirmation (CLI mode).
+     */
+    public void printTaskDeleted(Task task, int totalTasks) {
+        printMessage(formatTaskDeleted(task, totalTasks));
+    }
+
+    /**
+     * Prints a task updated confirmation (CLI mode).
+     */
+    public void printTaskUpdated(Task task) {
+        printMessage(formatTaskUpdated(task));
+    }
+
+    /**
+     * Formats the welcome message (GUI mode).
+     */
+    public String formatWelcome() {
+        return COFFEE + formatAsBold("Welcome to Cherry's Task Café!") + COFFEE + "\n"
+                + "Your cozy corner for managing life's orders.\n\n"
+                + "Type 'help' to see the full menu " + MENU;
+    }
+
+    /**
+     * Formats the help message (GUI mode).
+     */
+    public String formatHelp() {
+        return MENU + formatAsBold("CHERRY'S CAFÉ MENU") + MENU + "\n\n"
+                + COFFEE + formatAsBold("PLACING ORDERS (Adding Tasks):\n")
+                + "  1. todo DESCRIPTION\n"
+                + "     └─ Example: todo buy coffee beans\n\n"
+                + "  2. deadline DESCRIPTION /by DATE\n"
+                + "     └─ Example: deadline submit report /by 2025-12-31\n"
+                + "     └─ Note: Date format must be yyyy-MM-dd\n\n"
+                + "  3. event DESCRIPTION /from START /to END\n"
+                + "     └─ Example: event team meeting /from 2pm /to 4pm\n\n"
+                + COFFEE + formatAsBold("MANAGING ORDERS (Task Management):\n")
+                + "  4. list - View your complete order list\n"
+                + "  5. find KEYWORD - Search for specific orders\n"
+                + "  6. mark INDEX - Mark an order as complete\n"
+                + "  7. unmark INDEX - Mark an order as incomplete\n"
+                + "  8. update INDEX [/desc DESC] [/by DATE] [/from TIME] [/to TIME]\n"
+                + "  9. duplicate INDEX - Create a copy of an order\n"
+                + "  10. delete INDEX - Remove an order\n\n"
+                + COFFEE + formatAsBold("OTHER:\n")
+                + "  • help - Show this menu\n"
+                + "  • bye - Close the café\n\n"
+                + formatAsBold("💡Tips:\n")
+                + "  • All commands are case-insensitive\n"
+                + "  • Task numbering starts from 1\n"
+                + "  • Invalid dates will be caught\n";
+    }
+
+    /**
+     * Formats the goodbye message (GUI mode).
+     */
+    public String formatGoodbye() {
+        return COFFEE + " Thanks for visiting Cherry's Café! " + COFFEE + "\n"
+                + "Your orders are saved and ready for next time.\n";
+    }
+
+    /**
+     * Formats the task list as a cafe order list (GUI mode).
+     */
+    public String formatList(TaskList tasks) throws CherryException {
+        if (tasks.getTaskCount() == 0) {
+            return MENU + " Your order list is empty!\n"
+                    + "Ready to place your first order?\n"
+                    + "Try: 'todo buy coffee beans' ";
+        }
+
+        StringBuilder menu = new StringBuilder();
+        menu.append(MENU)
+                .append(formatAsBold("YOUR CAFÉ ORDER LIST"))
+                .append(MENU)
+                .append("\n");
+
+        int readyCount = 0;
+        int preparingCount = 0;
+
+        for (int i = 0; i < tasks.getTaskCount(); i += 1) {
+            Task task = tasks.getTask(i + 1);
+            menu.append(formatRow(i + 1, task));
+
+            if (i < tasks.getTaskCount() - 1) {
+                menu.append(DIVIDER).append("\n");
+            }
+
+            if (task.isDone()) {
+                readyCount += 1;
+            } else {
+                preparingCount += 1;
+            }
+        }
+
+        menu.append("\n");
+        menu.append(String.format("Total: %d orders │ %s %d ready │ %s %d preparing",
+                tasks.getTaskCount(), CHECK, readyCount, CIRCLE, preparingCount));
+
+        return menu.toString();
+    }
+
+    /**
+     * Formats the matching task list (GUI mode).
      */
     public String formatMatchingList(TaskList tasks) throws CherryException {
         if (tasks.getTaskCount() == 0) {
-            return CROSS + " No matching orders found!\n"
+            return CROSS + formatAsBold(" No matching orders found!\n")
                     + "Try a different search term or check your spelling.";
         }
 
         StringBuilder list = new StringBuilder();
-        list.append(" Found ").append(tasks.getTaskCount())
-                .append(" matching order(s):\n");
+        list.append("Found ").append(tasks.getTaskCount()).append(" matching order(s):\n");
 
-        for (int i = 0; i < tasks.getTaskCount(); i++) {
+        for (int i = 0; i < tasks.getTaskCount(); i += 1) {
             Task task = tasks.getTask(i + 1);
             String status = task.isDone() ? CHECK + " READY" : CIRCLE + " PREPARING";
-
             list.append(String.format("%d. %s │ ", i + 1, status));
+            list.append(formatTaskDetails(task)).append("\n");
 
-            if (task instanceof Deadline d) {
-                list.append(d.getDescription());
-                list.append("\n   Due: ").append(d.getDeadline());
-            } else if (task instanceof Event e) {
-                list.append(e.getDescription());
-                list.append("\n   ").append(e.getFrom()).append(" → ").append(e.getTo());
-            } else {
-                list.append(task.getDescription());
-            }
-
-            list.append("\n");
             if (i < tasks.getTaskCount() - 1) {
                 list.append("\n");
             }
@@ -252,157 +243,80 @@ public class Ui {
     }
 
     /**
-     * Shows a task was added (CLI mode).
-     */
-    public void printTaskAdded(Task task, int totalTasks) {
-        printMessage(formatTaskAdded(task, totalTasks));
-    }
-
-    /**
-     * Formats a task added message (GUI mode).
+     * Formats a task added confirmation (GUI mode).
      */
     public String formatTaskAdded(Task task, int totalTasks) {
-        String[] coffeeProgress = {
-            COFFEE,
-            COFFEE + COFFEE,
-            COFFEE + COFFEE + COFFEE,
-            COFFEE + COFFEE + COFFEE + " You're on a roll!"
-        };
-        int coffeeIndex = Math.min(totalTasks / 5, coffeeProgress.length - 1);
-        String coffee = coffeeProgress[coffeeIndex];
-
-        StringBuilder msg = new StringBuilder();
-        msg.append(CHECK).append(" Order placed! ").append(coffee).append("\n");
-
-        if (task instanceof Deadline d) {
-            msg.append(d.getDescription());
-            msg.append("\n  Due: ").append(d.getDeadline());
-        } else if (task instanceof Event e) {
-            msg.append(e.getDescription());
-            msg.append("\n  ").append(e.getFrom()).append(" → ").append(e.getTo());
-        } else {
-            msg.append(task.getDescription());
-        }
-
-        msg.append("\n");
-        msg.append(String.format("Total items on your list: %d", totalTasks));
-
-        return msg.toString();
+        return CHECK + formatAsBold("Order placed!:\n")
+                + formatTaskDetails(task) + "\n"
+                + "Total items on your list: " + totalTasks;
     }
 
     /**
-     * Shows a task was marked (CLI mode).
-     */
-    public void printTaskMarked(Task task) {
-        printMessage(formatTaskMarked(task));
-    }
-
-    /**
-     * Formats a task marked message (GUI mode).
+     * Formats a task marked confirmation (GUI mode).
      */
     public String formatTaskMarked(Task task) {
-        StringBuilder msg = new StringBuilder();
-        msg.append("Order complete! Great work!\n");
-        msg.append(CHECK).append(" ");
-
-        if (task instanceof Deadline d) {
-            msg.append(d.getDescription());
-            msg.append("\n  Was due: ").append(d.getDeadline());
-        } else if (task instanceof Event e) {
-            msg.append(e.getDescription());
-            msg.append("\n  ").append(e.getFrom()).append(" → ").append(e.getTo());
-        } else {
-            msg.append(task.getDescription());
-        }
-
-        msg.append("Time for a coffee break? ").append(COFFEE);
-
-        return msg.toString();
+        return formatAsBold("Order complete! Great work!\n")
+                + CHECK + " " + formatTaskDetails(task) + "\n"
+                + "Time for a coffee break? " + COFFEE;
     }
 
     /**
-     * Shows a task was unmarked (CLI mode).
-     */
-    public void printTaskUnmarked(Task task) {
-        printMessage(formatTaskUnmarked(task));
-    }
-
-    /**
-     * Formats a task unmarked message (GUI mode).
+     * Formats a task unmarked confirmation (GUI mode).
      */
     public String formatTaskUnmarked(Task task) {
-        StringBuilder msg = new StringBuilder();
-        msg.append("Back to preparing this order:\n");
-        msg.append(CIRCLE).append(" ");
-
-        if (task instanceof Deadline d) {
-            msg.append(d.getDescription());
-            msg.append("\n  Due: ").append(d.getDeadline());
-        } else if (task instanceof Event e) {
-            msg.append(e.getDescription());
-            msg.append("\n  ").append(e.getFrom()).append(" → ").append(e.getTo());
-        } else {
-            msg.append(task.getDescription());
-        }
-
-        return msg.toString();
+        return "Back to preparing this order:\n"
+                + CIRCLE + " " + formatTaskDetails(task);
     }
 
     /**
-     * Shows a task was deleted (CLI mode).
-     */
-    public void printTaskDeleted(Task task, int totalTasks) {
-        printMessage(formatTaskDeleted(task, totalTasks));
-    }
-
-    /**
-     * Formats a task deleted message (GUI mode).
+     * Formats a task deleted confirmation (GUI mode).
      */
     public String formatTaskDeleted(Task task, int totalTasks) {
-        StringBuilder msg = new StringBuilder();
-        msg.append("Order cancelled:\n");
-        msg.append(CROSS).append(" ");
-
-        if (task instanceof Deadline d) {
-            msg.append(d.getDescription());
-            msg.append("\n  Was due: ").append(d.getDeadline());
-        } else if (task instanceof Event e) {
-            msg.append(e.getDescription());
-            msg.append("\n  ").append(e.getFrom()).append(" → ").append(e.getTo());
-        } else {
-            msg.append(task.getDescription());
-        }
-
-        msg.append(String.format("Remaining orders: %d", totalTasks));
-
-        return msg.toString();
+        return formatAsBold("Order cancelled:\n")
+                + CROSS + " " + formatTaskDetails(task) + "\n"
+                + "Remaining orders: "
+                + totalTasks;
     }
 
     /**
-     * Shows a task was edited (CLI mode).
-     */
-    public void printTaskUpdated(Task task) {
-        printMessage(formatTaskUpdated(task));
-    }
-
-    /**
-     * Formats a task edited message (GUI mode).
+     * Formats a task updated confirmation (GUI mode).
      */
     public String formatTaskUpdated(Task task) {
-        StringBuilder msg = new StringBuilder();
-        msg.append("Order updated!\n");
-        msg.append(CIRCLE).append(" ");
+        return formatAsBold("Order updated:\n")
+                + CIRCLE + " " + formatTaskDetails(task);
+    }
 
+    /**
+     * Formats a single row for the task list.
+     * Produces the order number, status, and task details.
+     */
+    private String formatRow(int index, Task task) {
+        String orderNum = String.format("#%02d", index);
+        String status = task.isDone() ? CHECK + " READY    " : CIRCLE + " PREPARING";
+
+        return orderNum + " │ " + status + "\n"
+                + "    " + formatTaskDetails(task) + "\n";
+    }
+
+    /**
+     * Formats a task's description and time/date details into a single string.
+     */
+    private String formatTaskDetails(Task task) {
         if (task instanceof Deadline d) {
-            msg.append(d.getDescription());
-            msg.append("\n  Due: ").append(d.getDeadline());
+            return formatAsBold(d.getDescription())
+                    + "\n    " + COFFEE + " Due: " + d.getDeadline();
         } else if (task instanceof Event e) {
-            msg.append(e.getDescription());
-            msg.append("\n  ").append(e.getFrom()).append(" → ").append(e.getTo());
+            return formatAsBold(e.getDescription())
+                    + "\n    " + COFFEE + " " + e.getFrom() + " → " + e.getTo();
         } else {
-            msg.append(task.getDescription());
+            return formatAsBold(task.getDescription());
         }
+    }
 
-        return msg.toString();
+    /**
+     * Formats a string as bold.
+     */
+    private String formatAsBold(String string) {
+        return "**" + string + "**";
     }
 }

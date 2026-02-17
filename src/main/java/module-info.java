@@ -10,4 +10,8 @@ module cherry {
     exports cherry.gui;
     exports cherry.task;
     exports cherry.ui;
+    exports cherry.exception;
+    exports cherry.parser;
+    exports cherry.command;
+    exports cherry.storage;
 }

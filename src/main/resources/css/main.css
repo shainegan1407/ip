@@ -1,48 +1,16 @@
-/* ===== CUSTOM FONT DEFINITIONS ===== */
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/Inter-Regular.ttf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/Inter-Bold.ttf') format('opentype');
-    font-weight: bold;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/Inter-Italic.ttf') format('opentype');
-    font-weight: normal;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/Inter-BoldItalic.ttf') format('opentype');
-    font-weight: bold;
-    font-style: italic;
-}
-
-/* ===== CAFE COLOR PALETTE ===== */
 .root {
     -fx-cafe-dark: #3E2723;
     -fx-cafe-medium: #5D4037;
     -fx-cafe-light: #8D6E63;
     -fx-cafe-cream: #EFEBE9;
     -fx-cafe-accent: #D7CCC8;
-    -fx-font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-family: "Inter", "Segoe UI", Arial, sans-serif;
 }
 
-/* ===== MAIN WINDOW ===== */
 .root {
     -fx-background-color: #EFEBE9;
 }
 
-/* ===== SCROLL PANE ===== */
 #scrollPane {
     -fx-background-color: transparent;
     -fx-background: #EFEBE9;
@@ -66,19 +34,17 @@
     -fx-background-color: transparent;
 }
 
-/* ===== DIALOG CONTAINER ===== */
 #dialogContainer {
     -fx-background-color: #EFEBE9;
     -fx-padding: 10px;
     -fx-spacing: 12px;
 }
 
-/* ===== INPUT FIELD ===== */
 #userInput {
     -fx-background-color: white;
     -fx-text-fill: #3E2723;
     -fx-font-size: 16px;
-    -fx-font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-family: "Inter", "Segoe UI", Arial, sans-serif;
     -fx-padding: 10px 15px;
     -fx-background-radius: 0;
     -fx-prompt-text-fill: #8D6E63;
@@ -88,7 +54,6 @@
     -fx-background-color: #FAFAFA;
 }
 
-/* ===== SEND BUTTON ===== */
 #sendButton {
     -fx-background-color: #5D4037;
     -fx-text-fill: white;

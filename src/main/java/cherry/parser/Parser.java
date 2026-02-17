@@ -29,16 +29,335 @@ import cherry.task.Todo;
 public class Parser {
     private static final int MAX_TASKS = 100;
     private static final int MAX_DESCRIPTION_LENGTH = 500;
+    private static final String[] UPDATE_FIELDS = {"/desc", "/by", "/from", "/to"};
 
     /**
-     * Normalizes input by trimming and collapsing multiple spaces.
+     * Extracts task data from a saved line and returns the respective Task object.
+     */
+    public Task getTaskFromString(String input) throws CherryException {
+        assert input != null : "Input should not be null";
+
+        if (input.trim().isEmpty()) {
+            throw new CherryException("Empty line in data file - skipping.");
+        }
+
+        String[] tokens = input.split("\\|", -1);
+
+        if (tokens.length < 3) {
+            throw new CherryException("Invalid task format: " + input);
+        }
+
+        String taskType = tokens[0].trim();
+        String doneStatus = tokens[1].trim();
+        String description = tokens[2].trim();
+
+        validateDoneStatus(doneStatus);
+        validateDescription(description);
+
+        boolean isDone = doneStatus.equals("[X]");
+
+        try {
+            return buildTaskFromTokens(taskType, isDone, description, tokens);
+        } catch (CherryException e) {
+            throw new CherryException("Error parsing task from file: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Parses user input and returns the corresponding Command object.
+     */
+    public Command parse(String input) throws CherryException {
+        assert input != null : "Input should not be null";
+
+        String normalized = normalizeInput(input);
+
+        if (normalized.isEmpty()) {
+            throw new CherryException("I didn't catch that! Please type a command.\n"
+                    + "Type 'help' to see all available commands.");
+        }
+
+        String[] tokens = normalized.split(" ", 50);
+        String commandWord = tokens[0].toLowerCase();
+
+        try {
+            return buildCommand(commandWord, tokens);
+        } catch (CherryException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CherryException("Something unexpected happened: " + e.getMessage() + "\n"
+                    + "Please check your command format and try again!");
+        }
+    }
+
+    /**
+     * Delegates to the appropriate command builder based on the command word.
+     */
+    private Command buildCommand(String commandWord, String[] tokens) throws CherryException {
+        switch (commandWord) {
+        case "help":
+            return new HelpCommand();
+        case "bye":
+            return new ByeCommand();
+        case "list":
+            return new ListCommand();
+        case "find":
+            return parseFindCommand(tokens);
+        case "todo":
+            return parseTodoCommand(tokens);
+        case "deadline":
+            return parseDeadlineCommand(tokens);
+        case "event":
+            return parseEventCommand(tokens);
+        case "mark":
+            return new MarkCommand(getTaskNumber(tokens));
+        case "unmark":
+            return new UnmarkCommand(getTaskNumber(tokens));
+        case "delete":
+            return new DeleteCommand(getTaskNumber(tokens));
+        case "duplicate":
+            return new DuplicateCommand(getTaskNumber(tokens));
+        case "update":
+            return parseUpdateCommand(tokens);
+        default:
+            String suggestion = getSuggestion(commandWord);
+            throw new CherryException("I don't recognise '" + commandWord + "' as a command. "
+                    + suggestion + "\nType 'help' to see all available commands!");
+        }
+    }
+
+    /**
+     * Parses find commands.
+     */
+    private Command parseFindCommand(String[] tokens) throws CherryException {
+        requireArguments(tokens, "find", "find KEYWORD\nExample: find meeting");
+        return new FindCommand(getTargetTokens(tokens, 0, tokens.length));
+    }
+
+    /**
+     * Parses to-do commands.
+     */
+    private Command parseTodoCommand(String[] tokens) throws CherryException {
+        requireArguments(tokens, "todo", "todo DESCRIPTION\nExample: todo read book");
+        return new AddCommand(new Todo(getTargetTokens(tokens, 0, tokens.length)));
+    }
+
+    /**
+     * Parses deadline commands.
+     */
+    private Command parseDeadlineCommand(String[] tokens) throws CherryException {
+        requireArguments(tokens, "deadline",
+                "deadline DESCRIPTION /by DATE\nExample: deadline submit report /by 2025-12-31");
+
+        int byIndex = getIndex(tokens, "/by");
+
+        if (byIndex == 1) {
+            throw new CherryException("What's the deadline for?\n"
+                    + "Add a description before /by.");
+        }
+        if (byIndex == tokens.length - 1) {
+            throw new CherryException("When is the deadline?\n"
+                    + "Add a date after /by (e.g., /by 2025-12-31).");
+        }
+
+        String description = getTargetTokens(tokens, 0, byIndex);
+        LocalDate date = getDate(getTargetTokens(tokens, byIndex, tokens.length));
+
+        if (date.isBefore(LocalDate.now())) {
+            throw new CherryException("That deadline has already passed!\n"
+                    + "Are you sure you want to add it?");
+        }
+
+        return new AddCommand(new Deadline(description, date));
+    }
+
+    /**
+     * Parses event commands.
+     */
+    private Command parseEventCommand(String[] tokens) throws CherryException {
+        requireArguments(tokens, "event",
+                "event DESCRIPTION /from START /to END\nExample: event meeting /from 2pm /to 4pm");
+
+        int fromIndex = getIndex(tokens, "/from");
+        int toIndex = getIndex(tokens, "/to");
+
+        if (fromIndex >= toIndex) {
+            throw new CherryException("/from must come before /to in your command.");
+        }
+        if (fromIndex == 1) {
+            throw new CherryException("What's the event about?\n"
+                    + "Add a description before /from.");
+        }
+        if (fromIndex == toIndex - 1) {
+            throw new CherryException("When does the event start?\n"
+                    + "Add a start time after /from.");
+        }
+        if (toIndex == tokens.length - 1) {
+            throw new CherryException("When does the event end?\n"
+                    + "Add an end time after /to.");
+        }
+
+        String description = getTargetTokens(tokens, 0, fromIndex);
+        String from = getTargetTokens(tokens, fromIndex, toIndex);
+        String to = getTargetTokens(tokens, toIndex, tokens.length);
+
+        if (from.equalsIgnoreCase(to)) {
+            throw new CherryException("The start and end times are the same!\n"
+                    + "An event needs a duration.");
+        }
+
+        return new AddCommand(new Event(description, from, to));
+    }
+
+    /**
+     * Parses update commands.
+     */
+    private Command parseUpdateCommand(String[] tokens) throws CherryException {
+        int taskIndex = getTaskNumber(tokens);
+        Map<String, String> fields = extractUpdateFields(tokens);
+
+        if (fields.isEmpty()) {
+            throw new CherryException("What would you like to update?\n"
+                    + "Use /desc, /by, /from, or /to to specify changes.");
+        }
+
+        return new UpdateCommand(taskIndex, fields);
+    }
+
+    /**
+     * Extracts all recognized update fields from the token array into a map.
+     */
+    private Map<String, String> extractUpdateFields(String[] tokens) throws CherryException {
+        Map<String, String> fields = new HashMap<>();
+
+        for (String field : UPDATE_FIELDS) {
+            if (hasToken(tokens, field)) {
+                int fieldIdx = getIndex(tokens, field);
+                int nextIdx = findNextFieldIndex(tokens, field, fieldIdx);
+                String value = getTargetTokens(tokens, fieldIdx, nextIdx);
+
+                if (field.equals("/by")) {
+                    getDate(value);
+                }
+
+                fields.put(fieldKeyName(field), value);
+            }
+        }
+
+        return fields;
+    }
+
+    /**
+     * Finds the index of the next field flag that appears after currentIdx,
+     * returning tokens.length if none is found.
+     */
+    private int findNextFieldIndex(String[] tokens, String currentField, int currentIdx) {
+        int nextIdx = tokens.length;
+
+        for (String otherField : UPDATE_FIELDS) {
+            if (otherField.equals(currentField)) {
+                continue;
+            }
+            if (hasToken(tokens, otherField)) {
+                try {
+                    int idx = getIndex(tokens, otherField);
+                    if (idx > currentIdx && idx < nextIdx) {
+                        nextIdx = idx;
+                    }
+                } catch (CherryException ignored) {
+                    // Field not present or duplicate — skip
+                }
+            }
+        }
+
+        return nextIdx;
+    }
+
+    /**
+     * Converts a flag like "/by" into a plain key name like "by".
+     */
+    private String fieldKeyName(String flag) {
+        return flag.substring(1);
+    }
+
+    /**
+     * Constructs a Task from parsed save-file tokens.
+     */
+    private Task buildTaskFromTokens(String taskType, boolean isDone,
+                                     String description, String[] tokens) throws CherryException {
+        switch (taskType) {
+        case "(T)":
+            return new Todo(description, isDone);
+        case "(D)":
+            validateTokenCount(tokens, 4, "Deadline is missing its date field.");
+            validateNotEmpty(tokens[3].trim(), "Deadline date is empty.");
+            return new Deadline(description, isDone, getDate(tokens[3].trim()));
+        case "(E)":
+            validateTokenCount(tokens, 5, "Event is missing its time fields.");
+            validateNotEmpty(tokens[3].trim(), "Event start time is empty.");
+            validateNotEmpty(tokens[4].trim(), "Event end time is empty.");
+            return new Event(description, isDone, tokens[3].trim(), tokens[4].trim());
+        default:
+            throw new CherryException("Unknown task type: " + taskType);
+        }
+    }
+
+    /**
+     * Throws if tokens has fewer than 2 elements (i.e., no arguments given).
+     */
+    private void requireArguments(String[] tokens, String command, String usage)
+            throws CherryException {
+        if (tokens.length < 2) {
+            throw new CherryException("Your " + command + " needs more details!\n"
+                    + "Usage: " + usage);
+        }
+    }
+
+    /**
+     * Throws if doneStatus is not one of the two valid values.
+     */
+    private void validateDoneStatus(String doneStatus) throws CherryException {
+        if (!doneStatus.equals("[X]") && !doneStatus.equals("[ ]")) {
+            throw new CherryException("Invalid done status in file: '" + doneStatus + "'");
+        }
+    }
+
+    /**
+     * Throws if description is blank.
+     */
+    private void validateDescription(String description) throws CherryException {
+        if (description.isEmpty()) {
+            throw new CherryException("Task description is empty.");
+        }
+    }
+
+    /**
+     * Throws if the token array is shorter than the required length.
+     */
+    private void validateTokenCount(String[] tokens, int required, String message)
+            throws CherryException {
+        if (tokens.length < required) {
+            throw new CherryException(message);
+        }
+    }
+
+    /**
+     * Throws if the given value is empty.
+     */
+    private void validateNotEmpty(String value, String message) throws CherryException {
+        if (value.isEmpty()) {
+            throw new CherryException(message);
+        }
+    }
+
+    /**
+     * Trims and collapses multiple spaces into one.
      */
     private String normalizeInput(String input) {
         return input.trim().replaceAll("\\s+", " ");
     }
 
     /**
-     * Returns index of the target string in the tokens array.
+     * Returns the index of the single occurrence of text in tokens.
      */
     private int getIndex(String[] tokens, String text) throws CherryException {
         assert tokens != null : "Tokens should not be null";
@@ -47,7 +366,7 @@ public class Parser {
         int count = 0;
         int lastIndex = -1;
 
-        for (int i = 0; i < tokens.length; i++) {
+        for (int i = 0; i < tokens.length; i += 1) {
             if (text.equals(tokens[i])) {
                 count += 1;
                 lastIndex = i;
@@ -55,18 +374,19 @@ public class Parser {
         }
 
         if (count == 0) {
-            throw new CherryException("Hmm, I don't see '" + text + "' in your order. "
+            throw new CherryException("'" + text + "' is missing from your command.\n"
                     + "Did you forget to add it?");
         }
         if (count > 1) {
-            throw new CherryException("You mentioned '" + text + "' " + count + " times. "
-                    + "Please use it only once in your order!");
+            throw new CherryException("'" + text + "' appears " + count + " times.\n"
+                    + "Please use each flag only once.");
         }
 
         return lastIndex;
     }
+
     /**
-     * Returns true if specified token is found within the tokens array.
+     * Returns true if text appears at least once in tokens.
      */
     private boolean hasToken(String[] tokens, String text) {
         assert tokens != null;
@@ -77,139 +397,68 @@ public class Parser {
         }
         return false;
     }
+
     /**
-     * Returns the task number given in the tokens array.
+     * Parses and validates the task number from tokens[1].
      */
     private int getTaskNumber(String[] tokens) throws CherryException {
-        assert tokens != null : "Tokens should not be null";
-
         if (tokens.length < 2) {
-            throw new CherryException("Please tell me which item on your list");
+            throw new CherryException("Please provide a task number.\n"
+                    + "Example: mark 2");
         }
 
         String numberStr = tokens[1].trim();
 
-        // Check for non-numeric characters
         if (!numberStr.matches("\\d+")) {
-            throw new CherryException("Hmm, '" + numberStr + "' doesn't look like a number. "
-                    + "Please use a number like 1, 2, 3...");
+            throw new CherryException("'" + numberStr + "' is not a valid task number.\n"
+                    + "Please use a positive number like 1, 2, 3...");
         }
 
-        try {
-            int taskIndex = Integer.parseInt(numberStr);
-            if (taskIndex < 1) {
-                throw new CherryException("Task numbers start from 1! "
-                        + "Please use a positive number.");
-            }
-            if (taskIndex > MAX_TASKS) {
-                throw new CherryException("Whoa! Task number " + taskIndex + " is too high! "
-                        + "Please use a number up to " + MAX_TASKS + ".");
-            }
+        int taskIndex = Integer.parseInt(numberStr);
 
-            return taskIndex;
-        } catch (NumberFormatException e) {
-            throw new CherryException("Oops! '" + numberStr + "' is not a valid number. "
-                    + "Try something like 1, 2, or 3!");
+        if (taskIndex < 1) {
+            throw new CherryException("Task numbers start from 1.\n"
+                    + "Please use a positive number.");
         }
+        if (taskIndex > MAX_TASKS) {
+            throw new CherryException("Task number " + taskIndex + " is too high!\n"
+                    + "Please use a number up to " + MAX_TASKS + ".");
+        }
+
+        return taskIndex;
     }
 
     /**
-     * Extracts the target string found between two specified indexes of the tokens array.
+     * Joins tokens from startTokensIndex+1 to endTokensIndex into a trimmed string.
      */
-    private String getTargetTokens(String[] tokens, int startTokensIndex, int endTokensIndex) throws CherryException {
+    private String getTargetTokens(String[] tokens, int startTokensIndex,
+                                   int endTokensIndex) throws CherryException {
         assert tokens != null : "Tokens should not be null";
-        assert startTokensIndex >= 0 : "Start index should be non-negative";
-        assert endTokensIndex >= 0 : "End index should be non-negative";
+        assert startTokensIndex >= 0 : "Start index must be non-negative";
+        assert endTokensIndex >= 0 : "End index must be non-negative";
 
         if (endTokensIndex > tokens.length || startTokensIndex >= endTokensIndex) {
-            throw new CherryException("Oops! Something went wrong with your order. "
-                    + "Please check your command format.");
+            throw new CherryException("Something went wrong reading your command.\n"
+                    + "Please check the format and try again.");
         }
 
-        String result = String.join(" ", Arrays.copyOfRange(tokens, startTokensIndex + 1, endTokensIndex)).trim();
+        String result = String.join(" ",
+                Arrays.copyOfRange(tokens, startTokensIndex + 1, endTokensIndex)).trim();
 
         if (result.isEmpty()) {
-            throw new CherryException("Your description seems to be empty! "
+            throw new CherryException("The description is empty!\n"
                     + "Please add some details.");
         }
-
         if (result.length() > MAX_DESCRIPTION_LENGTH) {
-            throw new CherryException("Wow, that's quite detailed! "
-                    + "Please keep descriptions under " + MAX_DESCRIPTION_LENGTH + " characters.");
+            throw new CherryException("That description is too long!\n"
+                    + "Please keep it under " + MAX_DESCRIPTION_LENGTH + " characters.");
         }
 
         return result;
     }
 
     /**
-     * Extracts task data from a given line to return the respective cherry.task.Task object.
-     * Used in loading tasks from storage, to convert each line into a cherry.task.Task object.
-     */
-    public Task getTaskFromString(String input) throws CherryException {
-        assert input != null : "Input should not be null";
-
-        if (input.trim().isEmpty()) {
-            throw new CherryException("Empty line in data file - skipping");
-        }
-
-        String[] tokens = input.split("\\|", -1); // -1 to preserve empty trailing fields
-
-        if (tokens.length < 3) {
-            throw new CherryException("Invalid task format: " + input);
-        }
-
-        String taskType = tokens[0].trim();
-        String doneStatus = tokens[1].trim();
-        String description = tokens[2].trim();
-
-        // Validate done status
-        if (!doneStatus.equals("[X]") && !doneStatus.equals("[ ]")) {
-            throw new CherryException("Invalid done status: " + doneStatus);
-        }
-
-        boolean isDone = doneStatus.equals("[X]");
-
-        if (description.isEmpty()) {
-            throw new CherryException("Task description is empty");
-        }
-
-        Task task;
-        try {
-            switch (taskType) {
-            case "(T)":
-                task = new Todo(description, isDone);
-                break;
-            case "(D)":
-                if (tokens.length < 4) {
-                    throw new CherryException("Deadline is missing date field");
-                }
-                if (tokens[3].trim().isEmpty()) {
-                    throw new CherryException("Deadline date is empty");
-                }
-                task = new Deadline(description, isDone, getDate(tokens[3].trim()));
-                break;
-            case "(E)":
-                if (tokens.length < 5) {
-                    throw new CherryException("Event is missing time fields");
-                }
-                if (tokens[3].trim().isEmpty() || tokens[4].trim().isEmpty()) {
-                    throw new CherryException("Event times are empty");
-                }
-                String from = tokens[3].trim();
-                String to = tokens[4].trim();
-                task = new Event(description, isDone, from, to);
-                break;
-            default:
-                throw new CherryException("Unknown task type: " + taskType);
-            }
-        } catch (CherryException e) {
-            throw new CherryException("Error parsing task from file: " + e.getMessage());
-        }
-        return task;
-    }
-
-    /**
-     * Validates and parses date from input string in ISO_LOCAL_DATE pattern (yyyy-MM-dd)
+     * Parses and validates a date string in yyyy-MM-dd format.
      */
     public LocalDate getDate(String input) throws CherryException {
         assert input != null : "Date input should not be null";
@@ -217,44 +466,41 @@ public class Parser {
         String trimmed = input.trim();
 
         if (trimmed.isEmpty()) {
-            throw new CherryException("The date is missing! Please add a date in yyyy-MM-dd format "
-                    + "(like 2025-12-31).");
+            throw new CherryException("The date is missing!\n"
+                    + "Please provide a date in yyyy-MM-dd format (e.g., 2025-12-31).");
         }
 
-        // Check for common format mistakes
         if (!trimmed.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            throw new CherryException("The date format doesn't look right. "
-                    + "Please use yyyy-MM-dd format (like 2025-12-31)");
+            throw new CherryException("'" + trimmed + "' is not in the right format.\n"
+                    + "Please use yyyy-MM-dd (e.g., 2025-12-31).");
         }
+
         try {
             LocalDate date = LocalDate.parse(trimmed);
-
-            // Check if date is too far in the past
-            if (date.isBefore(LocalDate.now().minusYears(10))) {
-                throw new CherryException("This date is very far back!"
-                        + "Are you sure?");
-            }
-
-            // Check if date is too far in the future
-            if (date.isAfter(LocalDate.now().plusYears(50))) {
-                throw new CherryException("That's really far in the future! "
-                        + "Let's keep it within 50 years, shall we?");
-            }
+            validateDateRange(date, trimmed);
             return date;
         } catch (DateTimeParseException e) {
-            // Specific error for invalid dates like Feb 30
-            String[] parts = trimmed.split("-");
-            if (parts.length == 3) {
-                throw new CherryException(trimmed + " is not a valid date. "
-                        + "Please check the month and day.");
-            }
-            throw new CherryException("Hmm, I couldn't understand that date: " + trimmed + "\n"
-                    + "Please use yyyy-MM-dd format (like 2025-12-31).");
+            throw new CherryException("'" + trimmed + "' is not a valid date.\n"
+                    + "Please check the month and day values.");
         }
     }
 
     /**
-     * Suggests similar commands for typos.
+     * Throws if the date is too far in the past or future.
+     */
+    private void validateDateRange(LocalDate date, String trimmed) throws CherryException {
+        if (date.isBefore(LocalDate.now().minusYears(10))) {
+            throw new CherryException("'" + trimmed + "' is more than 10 years in the past.\n"
+                    + "Are you sure that's correct?");
+        }
+        if (date.isAfter(LocalDate.now().plusYears(50))) {
+            throw new CherryException("'" + trimmed + "' is more than 50 years in the future.\n"
+                    + "Let's keep it within 50 years, shall we?");
+        }
+    }
+
+    /**
+     * Returns a suggestion string if the input closely matches a known command.
      */
     private String getSuggestion(String input) {
         String[] commands = {"todo", "deadline", "event", "list", "find",
@@ -269,243 +515,26 @@ public class Parser {
     }
 
     /**
-     * Calculates Levenshtein distance for typo detection.
+     * Calculates edit distance between two strings for typo detection.
      */
     private int levenshteinDistance(String s1, String s2) {
         int[][] dp = new int[s1.length() + 1][s2.length() + 1];
 
-        for (int i = 0; i <= s1.length(); i++) {
+        for (int i = 0; i <= s1.length(); i += 1) {
             dp[i][0] = i;
         }
-        for (int j = 0; j <= s2.length(); j++) {
+        for (int j = 0; j <= s2.length(); j += 1) {
             dp[0][j] = j;
         }
-
-        for (int i = 1; i <= s1.length(); i++) {
-            for (int j = 1; j <= s2.length(); j++) {
+        for (int i = 1; i <= s1.length(); i += 1) {
+            for (int j = 1; j <= s2.length(); j += 1) {
                 int cost = s1.charAt(i - 1) == s2.charAt(j - 1) ? 0 : 1;
-                dp[i][j] = Math.min(Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1),
+                dp[i][j] = Math.min(
+                        Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1),
                         dp[i - 1][j - 1] + cost);
             }
         }
 
         return dp[s1.length()][s2.length()];
     }
-
-    /**
-     * Extracts command data from the given input to return the respective cherry.command.Command object.
-     */
-    public Command parse(String input) throws CherryException {
-        assert input != null : "Input should not be null";
-
-        String normalized = normalizeInput(input);
-
-        if (normalized.isEmpty()) {
-            throw new CherryException("Sorry, I didn't hear anything! "
-                    + "Please type a command.");
-        }
-
-        String[] tokens = normalized.split(" ", 50);
-
-        assert tokens.length > 0;
-        String commandWord = tokens[0].toLowerCase();
-
-        Command command;
-        try {
-            switch (commandWord) {
-            case "help":
-                command = new HelpCommand();
-                break;
-
-            case "bye":
-                command = new ByeCommand();
-                break;
-
-            case "list":
-                command = new ListCommand();
-                break;
-
-            case "find":
-                if (tokens.length < 2) {
-                    throw new CherryException("What should I look for? "
-                            + "Please add a keyword after 'find'.");
-                }
-                String keyword = getTargetTokens(tokens, 0, tokens.length);
-                command = new FindCommand(keyword);
-                break;
-
-            case "todo":
-                if (tokens.length < 2) {
-                    throw new CherryException("Your todo needs a description!\n"
-                            + "Try: todo read book");
-                }
-                String todoDesc = getTargetTokens(tokens, 0, tokens.length);
-                command = new AddCommand(new Todo(todoDesc));
-                break;
-
-            case "deadline":
-                if (tokens.length < 2) {
-                    throw new CherryException("Your deadline needs details!\n"
-                            + "Try: deadline return book /by 2025-12-31");
-                }
-
-                int byIndex = getIndex(tokens, "/by");
-
-                if (byIndex == 1) {
-                    throw new CherryException("What's the deadline for? "
-                            + "Add a description before /by.");
-                }
-
-                if (byIndex == tokens.length - 1) {
-                    throw new CherryException("When is the deadline? "
-                            + "Add a date after /by.");
-                }
-
-                String deadlineDesc = getTargetTokens(tokens, 0, byIndex);
-                String deadlineStr = getTargetTokens(tokens, byIndex, tokens.length);
-                LocalDate deadlineDate = getDate(deadlineStr);
-
-                // Check if deadline is in the past
-                if (deadlineDate.isBefore(LocalDate.now())) {
-                    throw new CherryException("That deadline has already passed! "
-                            + "Are you sure you want to add it?");
-                }
-
-                command = new AddCommand(new Deadline(deadlineDesc, deadlineDate));
-                break;
-
-            case "event":
-                if (tokens.length < 2) {
-                    throw new CherryException("Your event needs details! "
-                            + "Try: event meeting /from 2pm /to 4pm");
-                }
-
-                int fromIndex = getIndex(tokens, "/from");
-                int toIndex = getIndex(tokens, "/to");
-
-                if (fromIndex >= toIndex) {
-                    throw new CherryException("Oops! /from should come before /to in your command.");
-                }
-
-                if (fromIndex == 1) {
-                    throw new CherryException("What's the event about? "
-                            + "Add a description before /from.");
-                }
-
-                if (fromIndex == toIndex - 1) {
-                    throw new CherryException("When does the event start? "
-                            + "Add a start time after /from.");
-                }
-
-                if (toIndex == tokens.length - 1) {
-                    throw new CherryException("When does the event end? "
-                            + "Add an end time after /to.");
-                }
-
-                String eventDesc = getTargetTokens(tokens, 0, fromIndex);
-                String from = getTargetTokens(tokens, fromIndex, toIndex);
-                String to = getTargetTokens(tokens, toIndex, tokens.length);
-
-                // Validate start/end times aren't identical
-                if (from.equalsIgnoreCase(to)) {
-                    throw new CherryException("The start and end times are the same! "
-                            + "An event should have a duration.");
-                }
-
-                command = new AddCommand(new Event(eventDesc, from, to));
-                break;
-
-            case "mark":
-                command = new MarkCommand(getTaskNumber(tokens));
-                break;
-
-            case "unmark":
-                command = new UnmarkCommand(getTaskNumber(tokens));
-                break;
-
-            case "delete":
-                command = new DeleteCommand(getTaskNumber(tokens));
-                break;
-
-            case "duplicate":
-                command = new DuplicateCommand(getTaskNumber(tokens));
-                break;
-
-            case "update":
-                int updateIndex = getTaskNumber(tokens);
-                Map<String, String> fields = new HashMap<>();
-
-                if (hasToken(tokens, "/desc")) {
-                    int descIndex = getIndex(tokens, "/desc");
-                    int nextIndex = tokens.length;
-                    for (String field : new String[]{"/by", "/from", "/to"}) {
-                        if (hasToken(tokens, field)) {
-                            int idx = getIndex(tokens, field);
-                            if (idx > descIndex && idx < nextIndex) {
-                                nextIndex = idx;
-                            }
-                        }
-                    }
-                    fields.put("desc", getTargetTokens(tokens, descIndex, nextIndex));
-                }
-
-                if (hasToken(tokens, "/by")) {
-                    int byIdx = getIndex(tokens, "/by");
-                    int nextIndex = tokens.length;
-                    for (String field : new String[]{"/desc", "/from", "/to"}) {
-                        if (hasToken(tokens, field)) {
-                            int idx = getIndex(tokens, field);
-                            if (idx > byIdx && idx < nextIndex) {
-                                nextIndex = idx;
-                            }
-                        }
-                    }
-                    String dateStr = getTargetTokens(tokens, byIdx, nextIndex);
-                    getDate(dateStr); // Validate date format
-                    fields.put("by", dateStr);
-                }
-
-                if (hasToken(tokens, "/from")) {
-                    int fromIdx = getIndex(tokens, "/from");
-                    int nextIndex = tokens.length;
-                    for (String field : new String[]{"/desc", "/by", "/to"}) {
-                        if (hasToken(tokens, field)) {
-                            int idx = getIndex(tokens, field);
-                            if (idx > fromIdx && idx < nextIndex) {
-                                nextIndex = idx;
-                            }
-                        }
-                    }
-                    fields.put("from", getTargetTokens(tokens, fromIdx, nextIndex));
-                }
-
-                if (hasToken(tokens, "/to")) {
-                    int toIdx = getIndex(tokens, "/to");
-                    fields.put("to", getTargetTokens(tokens, toIdx, tokens.length));
-                }
-
-                if (fields.isEmpty()) {
-                    throw new CherryException("What would you like to update?\n"
-                            + "Use /desc, /by, /from, or /to to specify changes.");
-                }
-
-                command = new UpdateCommand(updateIndex, fields);
-                break;
-
-            default:
-                String suggestion = getSuggestion(commandWord);
-                throw new CherryException("Sorry, I don't recognise '" + commandWord + "' as a command. "
-                        + suggestion + "\n"
-                        + "Type 'help' to see all available commands!");
-            }
-        } catch (CherryException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new CherryException("Something unexpected happened: " + e.getMessage() + "\n"
-                    + "Please check your command format and try again!");
-        }
-
-        return command;
-    }
 }
-

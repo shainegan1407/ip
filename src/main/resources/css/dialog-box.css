@@ -1,32 +1,3 @@
-/* ===== CUSTOM FONT DEFINITIONS ===== */
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/Inter-Regular.ttf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/Inter-Bold.ttf') format('opentype');
-    font-weight: bold;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/Inter-Italic.ttf') format('opentype');
-    font-weight: normal;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/Inter-BoldItalic.ttf') format('opentype');
-    font-weight: bold;
-    font-style: italic;
-}
-
 /* ===== CAFE COLOR PALETTE ===== */
 .root {
     -fx-cafe-dark: #3E2723;
@@ -38,62 +9,64 @@
     -fx-success-green: #388E3C;
     -fx-warning-orange: #F57C00;
 }
-/* ===== BASE TEXT FLOW (Cherry bubble) ===== */
+
 .dialog-text {
     -fx-font-size: 16px;
     -fx-font-family: 'Inter', "Segoe UI", Arial, sans-serif;
     -fx-fill: #3E2723;
 }
 
-/* ===== BOLD SEGMENT ===== */
 .dialog-text-bold {
     -fx-font-weight: bold;
 }
 
-/* ===== TEXTFLOW BUBBLE STYLES ===== */
-
 TextFlow {
     -fx-background-color: white;
-    -fx-background-radius: 12px;
-    -fx-padding: 12px 16px;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 12 16 12 16;
 }
 
-/* Cherry message*/
 .reply-flow {
     -fx-background-color: #ebf6ff;
-    -fx-background-radius: 12px;
-    -fx-padding: 12px 16px;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 12 16 12 16;
 }
 
-/* ===== ERROR MESSAGE STYLING ===== */
 .error-flow {
     -fx-background-color: #FFEBEE;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 12 16 12 16;
 }
 
-.error-text {
-    -fx-text-fill: #C62828;
-}
-
-/* ===== SUCCESS MESSAGE STYLING ===== */
 .success-flow {
     -fx-background-color: #E8F5E9;
-    -fx-text-fill: #2E7D32;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 12 16 12 16;
 }
 
-.success-text {
+.warning-flow {
+    -fx-background-color: #FFF3E0;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 12 16 12 16;
+}
+
+.dialog-text.error-text {
+    -fx-fill: #C62828;
+}
+
+.dialog-text.success-text {
     -fx-fill: #2E7D32;
 }
 
-/* ===== WARNING MESSAGE STYLING ===== */
-.warning-flow {
-    -fx-background-color: #FFF3E0;
-}
-
-.warning-text {
+.dialog-text.warning-text {
     -fx-fill: #E65100;
 }
 
-/* ===== HOVER EFFECTS ===== */
 .reply-flow:hover {
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 12, 0, 0, 3);
 }

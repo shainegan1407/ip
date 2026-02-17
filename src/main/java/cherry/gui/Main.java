@@ -15,7 +15,7 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
-    private Cherry cherry = new Cherry();
+    private final Cherry cherry = new Cherry();
 
     @Override
     public void start(Stage stage) {
