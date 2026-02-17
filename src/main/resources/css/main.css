@@ -1,81 +1,112 @@
+/* ===== CUSTOM FONT DEFINITIONS ===== */
 @font-face {
-    -fx-font-family: 'San Francisco';
-    -fx-font-weight: normal;
-    -fx-font-style: normal;
-    src: url('../fonts/SF-Pro-Display-Regular.otf');
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Regular.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-    -fx-font-family: 'San Francisco';
-    -fx-font-weight: bold;
-    -fx-font-style: normal;
-    src: url('../fonts/SF-Pro-Display-Bold.otf');
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Bold.ttf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
 }
 
 @font-face {
-    -fx-font-family: 'San Francisco';
-    -fx-font-weight: normal;
-    -fx-font-style: italic;
-    src: url('../fonts/SF-Pro-Display-RegularItalic.otf');
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Italic.ttf') format('opentype');
+    font-weight: normal;
+    font-style: italic;
 }
 
 @font-face {
-    -fx-font-family: 'San Francisco';
-    -fx-font-weight: bold;
-    -fx-font-style: italic;
-    src: url('../fonts/SF-Pro-Display-BoldItalic.otf');
+    font-family: 'Inter';
+    src: url('../fonts/Inter-BoldItalic.ttf') format('opentype');
+    font-weight: bold;
+    font-style: italic;
 }
 
+/* ===== CAFE COLOR PALETTE ===== */
 .root {
-    main-color: #f9f9f9;       /* Create a looked-up color called "main-color" within root. */
-    -fx-background-color: #f9f9f9;
-    -fx-font: 16px "San Francisco","Helvetica";
-    -fx-text-fill: #3b3a3a;
+    -fx-cafe-dark: #3E2723;
+    -fx-cafe-medium: #5D4037;
+    -fx-cafe-light: #8D6E63;
+    -fx-cafe-cream: #EFEBE9;
+    -fx-cafe-accent: #D7CCC8;
+    -fx-font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
-.text-field {
-    -fx-background-color: #f4cfc6;
-    -fx-padding: 8px 12px;
+/* ===== MAIN WINDOW ===== */
+.root {
+    -fx-background-color: #EFEBE9;
 }
 
-.button {
+/* ===== SCROLL PANE ===== */
+#scrollPane {
     -fx-background-color: transparent;
-    -fx-font: bold 18px "San Francisco", "Helvetica";
-    -fx-background-radius: 1em;
-    -fx-padding: 8px 16px;
+    -fx-background: #EFEBE9;
 }
 
-.button:hover {
-    -fx-background-color: #dd7e68;
-    -fx-text-fill: #f9f9f9;
-    -fx-background-radius: 1em;
+#scrollPane .viewport {
+    -fx-background-color: #EFEBE9;
 }
 
-.button:pressed {
-    -fx-background-color: #3b3a3a;
-    -fx-text-fill: #f9f9f9;
-    -fx-background-radius: 1em;
+#scrollPane .scroll-bar:vertical {
+    -fx-background-color: #D7CCC8;
+    -fx-pref-width: 10px;
 }
 
-.scroll-pane,
-.scroll-pane .viewport {
+#scrollPane .scroll-bar:vertical .thumb {
+    -fx-background-color: #5D4037;
+    -fx-background-radius: 5px;
+}
+
+#scrollPane .scroll-bar:vertical .track {
     -fx-background-color: transparent;
 }
 
-.scroll-bar {
-    -fx-font-size: 10px;  /* Change width of scroll bar. */
-    -fx-background-color: main-color;
+/* ===== DIALOG CONTAINER ===== */
+#dialogContainer {
+    -fx-background-color: #EFEBE9;
+    -fx-padding: 10px;
+    -fx-spacing: 12px;
 }
 
-.scroll-bar .thumb {
-    -fx-background-color: #dd7e68;
-    -fx-background-radius: 1em;
+/* ===== INPUT FIELD ===== */
+#userInput {
+    -fx-background-color: white;
+    -fx-text-fill: #3E2723;
+    -fx-font-size: 16px;
+    -fx-font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-padding: 10px 15px;
+    -fx-background-radius: 0;
+    -fx-prompt-text-fill: #8D6E63;
 }
 
-/* Hides the increment and decrement buttons. */
-.scroll-bar .increment-button,
-.scroll-bar .decrement-button {
-    -fx-pref-height: 0;
-    -fx-opacity: 0;
+#userInput:focused {
+    -fx-background-color: #FAFAFA;
 }
 
+/* ===== SEND BUTTON ===== */
+#sendButton {
+    -fx-background-color: #5D4037;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    -fx-background-radius: 0;
+    -fx-border-width: 2px 2px 2px 0;
+    -fx-border-color: #5D4037;
+    -fx-cursor: hand;
+}
+
+#sendButton:hover {
+    -fx-background-color: #4E342E;
+    -fx-border-color: #4E342E;
+}
+
+#sendButton:pressed {
+    -fx-background-color: #3E2723;
+    -fx-border-color: #3E2723;
+}

@@ -62,9 +62,9 @@ public class Cherry {
             commandType = c.getClass().getSimpleName();
             return c.toString();
         } catch (CherryException e) {
-            return "Error: " + e.getMessage();
+            return "**Error: **" + e.getMessage();
         } catch (IOException e) {
-            return "Storage error! " + e.getMessage();
+            return "**Storage error! **" + e.getMessage();
         }
     }
 
@@ -93,7 +93,7 @@ public class Cherry {
             } catch (CherryException e) {
                 ui.printError(e.getMessage());
             } catch (IOException e) {
-                ui.printError("Storage error! " + e.getMessage());
+                ui.printError("**Storage error! **" + e.getMessage());
             }
         }
     }

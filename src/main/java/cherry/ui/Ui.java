@@ -51,7 +51,7 @@ public class Ui {
      * Formats the welcome message (GUI mode).
      */
     public String formatWelcome() {
-        return COFFEE + " Welcome to Cherry's Task Café! " + COFFEE + "\n"
+        return COFFEE + " **Welcome to Cherry's Task Café!**" + COFFEE + "\n"
                 + "Your cozy corner for managing life's orders.\n"
                 + "\n"
                 + "Type 'help' to see the full menu " + MENU;
@@ -69,8 +69,8 @@ public class Ui {
      */
     @SuppressWarnings("checkstyle:Regexp")
     public String formatHelp() {
-        return MENU + " CHERRY'S CAFÉ MENU " + MENU + "\n"
-                + "☕ PLACING ORDERS (Adding Tasks):\n"
+        return MENU + "**CHERRY'S CAFÉ MENU**" + MENU + "\n\n"
+                + "☕** PLACING ORDERS (Adding Tasks):**\n"
                 + "  1. todo DESCRIPTION\n"
                 + "     └─ Add a simple to-do task\n"
                 + "     └─ Example: todo buy coffee beans\n\n"
@@ -81,7 +81,7 @@ public class Ui {
                 + "  3. event DESCRIPTION /from START /to END\n"
                 + "     └─ Add a scheduled event\n"
                 + "     └─ Example: event team meeting /from 2pm /to 4pm\n\n"
-                + "☕ MANAGING ORDERS (Task Management):\n"
+                + "☕** MANAGING ORDERS (Task Management):**\n"
                 + "  4. list\n"
                 + "     └─ View your complete order list\n\n"
                 + "  5. find KEYWORD\n"
@@ -102,10 +102,10 @@ public class Ui {
                 + "  10. delete INDEX\n"
                 + "     └─ Remove an order from your list\n"
                 + "     └─ Example: delete 1\n\n"
-                + "☕ OTHER:\n"
+                + "☕ **OTHER:**\n"
                 + "  • help - Show this menu\n"
                 + "  • bye - Close the café\n\n"
-                + "💡 Tips:\n"
+                + "💡 **Tips:**\n"
                 + "  • All commands are case-insensitive\n"
                 + "  • Task numbering starts from 1\n"
                 + "  • Invalid dates will be caught\n";
@@ -159,7 +159,7 @@ public class Ui {
         }
 
         StringBuilder menu = new StringBuilder();
-        menu.append(MENU).append(" YOUR CAFÉ ORDER LIST ").append(MENU).append("\n");
+        menu.append(MENU).append("**YOUR CAFÉ ORDER LIST**").append(MENU).append("\n");
 
         int readyCount = 0;
         int preparingCount = 0;
@@ -174,7 +174,9 @@ public class Ui {
 
             // Task description
             if (task instanceof Deadline d) {
+                menu.append("**");
                 menu.append(d.getDescription());
+                menu.append("**");
                 menu.append("\n    ").append(COFFEE).append(" Due: ").append(d.getDeadline());
             } else if (task instanceof Event e) {
                 menu.append(e.getDescription());
@@ -198,7 +200,7 @@ public class Ui {
         }
 
         menu.append("\n");
-        menu.append(String.format("Total: %d orders │ %s %d ready │ %s %d preparing",
+        menu.append(String.format("**Total: %d orders │ %s %d ready │ %s %d preparing**",
                 tasks.getTaskCount(), CHECK, readyCount, CIRCLE, preparingCount));
 
         return menu.toString();

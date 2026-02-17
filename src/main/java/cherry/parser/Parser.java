@@ -91,7 +91,7 @@ public class Parser {
 
         // Check for non-numeric characters
         if (!numberStr.matches("\\d+")) {
-            throw new CherryException("☕ Hmm, '" + numberStr + "' doesn't look like a number. "
+            throw new CherryException("Hmm, '" + numberStr + "' doesn't look like a number. "
                     + "Please use a number like 1, 2, 3...");
         }
 
@@ -336,7 +336,7 @@ public class Parser {
 
             case "todo":
                 if (tokens.length < 2) {
-                    throw new CherryException("Your todo needs a description! "
+                    throw new CherryException("Your todo needs a description!\n"
                             + "Try: todo read book");
                 }
                 String todoDesc = getTargetTokens(tokens, 0, tokens.length);
@@ -345,7 +345,7 @@ public class Parser {
 
             case "deadline":
                 if (tokens.length < 2) {
-                    throw new CherryException("Your deadline needs details! "
+                    throw new CherryException("Your deadline needs details!\n"
                             + "Try: deadline return book /by 2025-12-31");
                 }
 
@@ -485,7 +485,7 @@ public class Parser {
                 }
 
                 if (fields.isEmpty()) {
-                    throw new CherryException("What would you like to update? "
+                    throw new CherryException("What would you like to update?\n"
                             + "Use /desc, /by, /from, or /to to specify changes.");
                 }
 

@@ -9,26 +9,30 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 /**
  * Represents a dialog box consisting of an ImageView to represent the speaker's face
- * and a label containing text from the speaker.
+ * and a TextFlow containing formatted text from the speaker.
  */
 public class DialogBox extends HBox {
     @FXML
-    private Label dialog;
+    private TextFlow dialog;
     @FXML
     private ImageView displayPicture;
 
+    // Stored so renderText() can re-render with correct styles when type is applied
+    private String rawText;
+    private String messageType;
+
     /**
-     * Displays the message give by string alongside the given image as an icon.
+     * Displays the message given by string alongside the given image as an icon.
      */
     private DialogBox(String text, Image img) {
         try {
@@ -40,24 +44,91 @@ public class DialogBox extends HBox {
             e.printStackTrace();
         }
 
-        dialog.setText(text);
-        dialog.getStyleClass().add("label");
+        this.rawText = text;
+        this.messageType = null;
+
+        renderText();
         displayPicture.setImage(img);
-        clipImageToCircle();
         applyImageShadow();
-    }
-    /**
-     * Clips the display picture to a circular shape.
-     */
-    private void clipImageToCircle() {
-        // Get the center point (assuming square image)
-        double radius = displayPicture.getFitWidth() / 2;
-        Circle clip = new Circle(radius, radius, radius);
-        displayPicture.setClip(clip);
     }
 
     /**
-     * Applies drop shadow effect to the image container.
+     * Parses rawText and rebuilds the TextFlow children with correct style classes.
+     * Segments wrapped in **double asterisks** are rendered bold.
+     * Message type color classes are applied at the same time as text creation,
+     * ensuring styles are never set on stale nodes.
+     */
+    private void renderText() {
+        dialog.getChildren().clear();
+
+        String[] parts = rawText.split("\\*\\*", -1);
+
+        for (int i = 0; i < parts.length; i++) {
+            if (parts[i].isEmpty()) {
+                continue;
+            }
+
+            Text segment = new Text(parts[i]);
+            segment.getStyleClass().add("dialog-text");
+
+            // Odd-indexed parts sit between ** markers — render bold
+            if (i % 2 == 1) {
+                segment.getStyleClass().add("dialog-text-bold");
+            }
+
+            // Apply message type color class at creation time
+            if (messageType != null) {
+                switch (messageType) {
+                case "error":
+                    segment.getStyleClass().add("error-text");
+                    break;
+                case "success":
+                    segment.getStyleClass().add("success-text");
+                    break;
+                case "warning":
+                    segment.getStyleClass().add("warning-text");
+                    break;
+                default:
+                    break;
+                }
+            }
+
+            dialog.getChildren().add(segment);
+        }
+    }
+
+    /**
+     * Sets the message type, updates the TextFlow bubble style,
+     * and re-renders text nodes so color classes are applied correctly.
+     */
+    private void applyMessageStyle(String messageType) {
+        this.messageType = messageType;
+
+        // Update TextFlow bubble background/border
+        dialog.getStyleClass().removeAll("error-flow", "success-flow", "warning-flow");
+
+        if (messageType != null) {
+            switch (messageType.toLowerCase()) {
+            case "error":
+                dialog.getStyleClass().add("error-flow");
+                break;
+            case "success":
+                dialog.getStyleClass().add("success-flow");
+                break;
+            case "warning":
+                dialog.getStyleClass().add("warning-flow");
+                break;
+            default:
+                break;
+            }
+        }
+
+        // Re-render so Text nodes get the correct color style class
+        renderText();
+    }
+
+    /**
+     * Applies drop shadow effect to the dialog box.
      */
     private void applyImageShadow() {
         DropShadow shadow = new DropShadow();
@@ -76,17 +147,19 @@ public class DialogBox extends HBox {
         Collections.reverse(tmp);
         getChildren().setAll(tmp);
         setAlignment(Pos.TOP_LEFT);
-        dialog.getStyleClass().add("reply-label");
+        dialog.getStyleClass().add("reply-flow");
     }
 
     /**
-     * Creates a dialog box on the left side of the screen for Cherry.
+     * Creates a dialog box on the left side of the screen for Cherry with message type styling.
      */
-    public static DialogBox getCherryDialog(String text, Image img, String commandType) {
+    public static DialogBox getCherryDialog(String text, Image img, String messageType) {
         var db = new DialogBox(text, img);
         db.flip();
+        db.applyMessageStyle(messageType);
         return db;
     }
+
     /**
      * Creates a dialog box on the left side of the screen for Cherry.
      */
@@ -95,6 +168,7 @@ public class DialogBox extends HBox {
         db.flip();
         return db;
     }
+
     /**
      * Creates a dialog box on the right side of the screen for the user.
      */
