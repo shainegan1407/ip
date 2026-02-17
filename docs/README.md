@@ -1,19 +1,19 @@
-# Cherry User Guide
+# Cherry's Task Café ☕
 
-**Cherry** is a desktop task management app that works both as a Command Line Interface (CLI) application and as a Graphical User Interface (GUI) application. Whether you prefer typing commands quickly or clicking through a visual interface, Cherry adapts to your workflow.
+**Cherry** is a desktop task management app styled as a cosy café, where your tasks
+are "orders" and Cherry is your barista. It works as both a Command Line Interface
+(CLI) application and a Graphical User Interface (GUI) application.
 
 ---
 
 ## Quick Start
 
-### Option 1: GUI Mode (Recommended for Beginners)
-
 1. **Ensure you have Java 17 or above** installed on your computer.
-    - Mac users: Ensure you have the precise JDK version as prescribed.
 
-2. **Download the latest `.jar` file** from [here](https://github.com/YOUR_USERNAME/ip/releases).
+2. **Download the latest `.jar` file** from
+   [here](https://github.com/YOUR_USERNAME/ip/releases).
 
-3. **Double-click the jar file** to launch the GUI, or open a command terminal and run:
+3. **Launch the app** by double-clicking the jar file, or run:
 ```
    java -jar cherry.jar
 ```
@@ -21,381 +21,400 @@
 4. **A GUI similar to the below should appear** in a few seconds:
    ![Cherry GUI](Ui.png)
 
-5. **Type a command** in the text field at the bottom and press Enter or click Send to execute it. Example commands:
-    - `list` : Lists all tasks
-    - `todo read book` : Adds a todo task "read book"
-    - `bye` : Exits the app
+5. **Type a command** in the text field at the bottom and press **Enter** or
+   click **Send**.
 
-6. **Your messages appear on the right** (coral/pink background), and **Cherry's responses appear on the left** (light pink background).
+6. Refer to the [Features](#features) section for details of each command.
 
-7. Refer to the [Features](#features) section for details of each command.
+---
 
-### Option 2: CLI Mode (For Advanced Users)
+## GUI Overview
 
-1. **Ensure you have Java 17 or above** installed.
-
-2. **Download the latest `.jar` file** from [here](https://github.com/YOUR_USERNAME/ip/releases).
-
-3. **Open a command terminal**, navigate to the folder containing the jar file, and run:
-```
-   java -jar cherry.jar
-```
-
-4. **Type commands directly** in the terminal and press Enter.
-
-5. Cherry will display responses in the terminal with formatted text boxes.
+| Element | Description                                        |
+|---------|----------------------------------------------------|
+| **Your messages** | Appear on the **right** with a white bubble        |
+| **Cherry's responses** | Appear on the **left** with a light blue bubble    |
+| **Errors** | Red bubble to catch your attention                 |
+| **Successes** | Green bubble to confrim completed actions          |
+| **Warnings** | Orange bubble for actions that need your attention |
+| **Auto-scroll** | Chat scrolls to the latest message automatically   |
+| **Resizable window** | Messages resize as the window is resized           |
 
 ---
 
 ## Features
 
-### 📝 Notes about the command format:
+### Notes about command format
 
-- **Works identically in both GUI and CLI modes** - all commands below work the same way
-- **Words in `UPPER_CASE`** are parameters to be supplied by you.
-    - Example: In `todo DESCRIPTION`, `DESCRIPTION` can be used as `todo read book`
-
+- **Words in `UPPER_CASE`** are parameters you supply.
+    - Example: `todo DESCRIPTION` → `todo read book`
 - **Items in square brackets are optional.**
-    - Example: `update INDEX [/desc DESCRIPTION]` can be used as `update 1 /desc new description` or just `update 1`
+    - Example: `update 1 [/desc DESCRIPTION]` → `update 1 /desc new name`
+- **Date format:** All dates must use `yyyy-MM-dd` (e.g. `2025-02-15`).
+- **Task numbers** are positive integers starting from 1 (maximum 100).
+- All commands are **case-insensitive**.
 
-- **Date format:** Dates must be in `yyyy-MM-dd` format (e.g., `2025-02-15`)
-
-- **Task numbers** must be positive integers from 1 to 100
-
-⚠️ **Warning:** If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines, as space characters may be omitted.
+> ⚠️ If using a PDF copy of this guide, be careful copying multi-line commands —
+> spaces may be lost.
 
 ---
 
 ## Commands
 
-All commands work identically in both GUI and CLI modes. Simply type the command and press Enter.
+### `help` — View the menu
 
-### Viewing help: `help`
-
-Shows a help message explaining available commands.
-
-**Format:** `help`
-
-**GUI:** Type in the text field and press Enter or click Send  
-**CLI:** Type in the terminal and press Enter
+Displays all available commands.
+```
+help
+```
 
 ---
 
-### Adding a Todo: `todo`
+### `todo` — Add a to-do
 
-Adds a todo task to your task list.
-
-**Format:** `todo DESCRIPTION`
+Adds a simple task with no date.
+```
+todo DESCRIPTION
+```
 
 **Examples:**
-- `todo read book`
-- `todo finish assignment`
-- `todo buy groceries`
-
-**Expected output:**
 ```
-New Task: (T) [ ] read book
-Now you have 1 tasks in the list.
+todo read book
+todo buy coffee beans
 ```
 
-**GUI:** Response appears in a light pink bubble on the left  
-**CLI:** Response appears in a formatted text box
+**Response:**
+```
+✓ Order placed! ☕
+read book
+Total items on your list: 1
+```
 
 ---
 
-### Adding a Deadline: `deadline`
+### `deadline` — Add a deadline
 
-Adds a task with a deadline.
+Adds a task that must be completed by a specific date.
+```
+deadline DESCRIPTION /by DATE
+```
 
-**Format:** `deadline DESCRIPTION /by DATE`
-
-- `DATE` must be in `yyyy-MM-dd` format
+- `DATE` must be in `yyyy-MM-dd` format.
+- Dates in the past will show a warning.
 
 **Examples:**
-- `deadline return book /by 2025-03-15`
-- `deadline submit report /by 2025-12-31`
-
-**Expected output:**
 ```
-New Task: (D) [ ] return book (by: Mar 15 2025)
-Now you have 2 tasks in the list.
+deadline submit report /by 2025-12-31
+deadline return book /by 2025-03-15
+```
+
+**Response:**
+```
+✓ Order placed!
+return book
+  ☕ Due: 15 Mar 2025
+Total items on your list: 2
 ```
 
 ---
 
-### Adding an Event: `event`
+### `event` — Add an event
 
-Adds an event with a start and end time.
+Adds a task that spans a time range.
+```
+event DESCRIPTION /from START /to END
+```
 
-**Format:** `event DESCRIPTION /from START /to END`
+- `/from` must appear before `/to`.
+- Start and end times cannot be identical.
 
 **Examples:**
-- `event project meeting /from 2pm /to 4pm`
-- `event team lunch /from Monday 12pm /to Monday 2pm`
-
-**Expected output:**
 ```
-New Task: (E) [ ] project meeting (from: 2pm to: 4pm)
-Now you have 3 tasks in the list.
+event project meeting /from 2pm /to 4pm
+event team lunch /from Monday 12pm /to Monday 2pm
 ```
 
----
-
-### Listing all tasks: `list`
-
-Shows a list of all tasks.
-
-**Format:** `list`
-
-**Expected output:**
+**Response:**
 ```
-Here are the tasks in your list:
-1. (T) [ ] read book
-2. (D) [ ] return book (by: Mar 15 2025)
-3. (E) [ ] project meeting (from: 2pm to: 4pm)
+✓ Order placed!
+project meeting
+  ☕ 2pm → 4pm
+Total items on your list: 3
 ```
 
 ---
 
-### Finding tasks: `find`
+### `list` — View all orders
 
-Finds tasks containing the specified keyword.
+Displays your complete task list as a café order list.
+```
+list
+```
 
-**Format:** `find KEYWORD`
+**Response:**
+```
+📋 YOUR CAFÉ ORDER LIST 📋
 
-- The search is **case-sensitive** (e.g., `book` will not match `Book`)
-- Searches in task descriptions only
-- Only exact substring matches are supported
+#01 │ ○ PREPARING
+    read book
+┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+#02 │ ✓ READY
+    return book
+    ☕ Due: 15 Mar 2025
+┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+#03 │ ○ PREPARING
+    project meeting
+    ☕ 2pm → 4pm
+
+Total: 3 orders │ ✓ 1 ready │ ○ 2 preparing
+```
+
+---
+
+### `find` — Search orders
+
+Finds all tasks whose description contains the keyword.
+```
+find KEYWORD
+```
+
+- Search is **case-insensitive**.
+- Matches substrings (e.g. `book` matches `read book`).
 
 **Examples:**
-- `find book` returns tasks with "book" in the description
-- `find meeting` returns tasks with "meeting" in the description
-
-**Expected output:**
 ```
-Here are the related tasks in your list:
-1. (T) [ ] read book
-2. (D) [ ] return book (by: Mar 15 2025)
+find book
+find meeting
+```
+
+**Response:**
+```
+Found 2 matching order(s):
+1. ○ PREPARING │ read book
+2. ○ PREPARING │ return book
+                  ☕ Due: 15 Mar 2025
 ```
 
 ---
 
-### Marking a task as done: `mark`
+### `mark` — Mark an order as done
 
-Marks the specified task as completed.
-
-**Format:** `mark INDEX`
-
-- `INDEX` refers to the task number shown in the task list
-- `INDEX` must be a positive integer: 1, 2, 3, ...
+Marks the task at the given index as completed.
+```
+mark INDEX
+```
 
 **Examples:**
-- `list` followed by `mark 2` marks the 2nd task as done
-
-**Expected output:**
 ```
-Good job! I've marked this task as done:
-(D) [X] return book (by: Mar 15 2025)
+mark 2
+```
+
+**Response:**
+```
+Order complete! Great work!
+✓ return book
+  Was due: 15 Mar 2025
+Time for a coffee break? ☕
 ```
 
 ---
 
-### Unmarking a task: `unmark`
+### `unmark` — Mark an order as not done
 
-Marks the specified task as not done.
-
-**Format:** `unmark INDEX`
+Marks the task at the given index as incomplete.
+```
+unmark INDEX
+```
 
 **Examples:**
-- `unmark 2` unmarks the 2nd task
-
-**Expected output:**
 ```
-Alright, I've unmarked this task:
-(D) [ ] return book (by: Mar 15 2025)
+unmark 2
+```
+
+**Response:**
+```
+Back to preparing this order:
+○ return book
+  Due: 15 Mar 2025
 ```
 
 ---
 
-### Deleting a task: `delete`
+### `update` — Edit an existing order
 
-Deletes the specified task from your task list.
+Modifies one or more fields of an existing task.
+```
+update INDEX [/desc DESCRIPTION] [/by DATE] [/from TIME] [/to TIME]
+```
 
-**Format:** `delete INDEX`
+- At least one field flag must be provided.
+- Each flag may only appear once per command.
+- Flags must be compatible with the task type:
+
+| Task type | Allowed flags |
+|-----------|--------------|
+| Todo | `/desc` |
+| Deadline | `/desc`, `/by` |
+| Event | `/desc`, `/from`, `/to` |
 
 **Examples:**
-- `list` followed by `delete 3` deletes the 3rd task
-- `find book` followed by `delete 1` deletes the 1st task in the search results
-
-**Expected output:**
 ```
-Alright, I've deleted this task:
-(E) [ ] project meeting (from: 2pm to: 4pm)
-Now you have 2 tasks in the list.
+update 1 /desc buy oat milk
+update 2 /by 2026-01-01
+update 3 /from 3pm /to 5pm
+update 3 /desc standup /from 9am /to 9:30am
+```
+
+**Response:**
+```
+Order updated!
+○ buy oat milk
 ```
 
 ---
 
-### Exiting the program: `bye`
+### `duplicate` — Copy an order
 
-Exits the application.
-
-**Format:** `bye`
-
-**Expected output:**
+Creates an identical copy of an existing task and appends it to the list.
 ```
-See you next time, goodbye!
+duplicate INDEX
 ```
 
-**GUI:** The window will remain open - you can close it manually  
-**CLI:** The program will exit immediately
+**Examples:**
+```
+duplicate 2
+```
 
 ---
 
-## GUI-Specific Features
+### `delete` — Remove an order
 
-### Visual Indicators
+Deletes the task at the given index.
+```
+delete INDEX
+```
 
-- **Your messages:** Appear on the right side with a pink background and rounded corners
-- **Cherry's responses:** Appear on the left side with a light pink background
+**Examples:**
+```
+delete 3
+```
 
-### Circular Profile Pictures
+**Response:**
+```
+Order cancelled:
+✗ project meeting
+  2pm → 4pm
+Remaining orders: 2
+```
 
-- **Your profile picture** appears on the right
-- **Cherry's profile picture** appears on the left
-- Both images are circular with subtle drop shadows
+---
 
-### Scrolling
+### `bye` — Close the café
 
-- The chat scrolls automatically as new messages appear
-- Scroll up to view older messages
+Exits the application. Your data is saved automatically before exit.
+```
+bye
+```
 
-### Input Field
+**Response:**
+```
+☕ Thanks for visiting Cherry's Café! ☕
+Your orders are saved and ready for next time.
+```
 
-- Type commands in the text field at the bottom
-- Press **Enter** or click **Send** to execute
-- The input field clears automatically after sending
+> **GUI:** The window closes automatically after a short delay.  
+> **CLI:** The program exits immediately.
+
+---
+
+## Error Handling
+
+Cherry validates all input and provides clear, specific error messages:
+
+| Situation | Example error |
+|-----------|--------------|
+| Unknown command | `I don't recognise 'lst'. Did you mean 'list'?` |
+| Missing description | `Your todo needs more details!` |
+| Wrong date format | `'25-12-2025' is not in the right format. Please use yyyy-MM-dd.` |
+| Non-existent date | `'2025-02-30' is not a valid date.` |
+| Wrong field for task type | `This is a Todo task. You can only update: /desc` |
+| Task number out of range | `Task number 99 is too high! Please use a number up to 100.` |
+| Duplicate flag | `'/by' appears 2 times. Please use each flag only once.` |
+
+In the GUI, errors appear in a **red bubble** so they are immediately visible.
 
 ---
 
 ## Data Management
 
-### Saving the data
+### Automatic saving
 
-Your task data is **saved automatically** to the hard disk after any command that changes the data. There is no need to save manually.
+Your tasks are saved automatically after every change. No manual saving is needed.
 
-**Data location:** `[JAR file location]/data/cherry.txt`
+**File location:** `[JAR file location]/data/cherry.txt`
 
-**This works the same in both GUI and CLI modes.**
-
----
-
-### Editing the data file
-
-Cherry data is saved as a text file at `./data/cherry.txt`. Advanced users are welcome to update data directly by editing that file.
-
-**Format:** Each line represents one task:
+### File format
 ```
 (T) | [ ] | task description
 (D) | [X] | task description | 2025-12-31
 (E) | [ ] | task description | start time | end time
 ```
 
-⚠️ **Caution:**
-- If your changes make the file format invalid, Cherry will skip corrupted lines and display a warning in the console
-- Ensure you follow the exact format above with the pipe `|` separator
-- It is recommended to backup the file before editing
+### Manual editing
+
+Advanced users may edit `data/cherry.txt` directly. Follow the exact format above,
+using `|` as the separator.
+
+> ⚠️ Back up the file before editing. Lines with invalid format are skipped on
+> load and a warning is shown in the console.
 
 ---
 
 ## FAQ
 
-**Q: How do I transfer my data to another computer?**
+**Q: How do I move my data to another computer?**  
+Copy `data/cherry.txt` to the same location on the new computer.
 
-A: Copy the `data/cherry.txt` file to the same location on the new computer. Works for both GUI and CLI modes.
+**Q: Can I use both GUI and CLI modes with the same data?**  
+Yes. Both modes read from and write to the same `data/cherry.txt` file.
 
----
+**Q: What if I enter a date that has already passed?**  
+Cherry will show an error: `That deadline has already passed! Are you sure you
+want to add it?`
 
-**Q: Can I switch between GUI and CLI mode?**
-
-A: Yes! Both modes read and write to the same `data/cherry.txt` file. You can use GUI one day and CLI the next without any issues.
-
----
-
-**Q: Which mode should I use?**
-
-A:
-- **GUI mode** is recommended for beginners or if you prefer visual feedback
-- **CLI mode** is great for advanced users who type quickly and prefer keyboard-only interaction
-
----
-
-**Q: What happens if I enter an invalid date?**
-
-A: Cherry will show an error message: "Invalid date format. Please use yyyy-MM-dd (E.g. 2025-12-31)"  
-This appears in a dialog bubble (GUI) or text box (CLI).
-
----
-
-**Q: Can I have tasks with the same description?**
-
-A: Yes, Cherry allows duplicate task descriptions. Each task is identified by its position in the list.
-
----
-
-**Q: Does the GUI have keyboard shortcuts?**
-
-A: Yes! Press **Enter** in the text field to send your command without clicking the Send button.
+**Q: Are duplicate tasks allowed?**  
+Yes. Tasks are identified by their index, not their description.
 
 ---
 
 ## Known Issues
 
-1. **Multi-monitor setup:** When using multiple screens, if you move Cherry to a secondary screen and later switch to only the primary screen, the GUI may open off-screen. **Remedy:** Delete the `preferences.json` file before running again.
+1. **Multi-monitor setup:** Moving Cherry to a secondary monitor and later
+   disconnecting it may cause the window to open off-screen. Delete
+   `preferences.json` to reset the position.
 
-2. **Long task descriptions:** Very long task descriptions may cause text wrapping in the GUI. **Remedy:** Keep descriptions under 100 characters for best display.
-
-3. **Font rendering:** If the San Francisco font doesn't load properly, Cherry will fall back to Helvetica.
+2. **Very long descriptions:** Descriptions over ~100 characters may wrap
+   awkwardly in the chat bubble. Keep descriptions concise for best results.
 
 ---
 
 ## Command Summary
 
-| Action | Format | Example |
-|--------|--------|---------|
-| **Add Todo** | `todo DESCRIPTION` | `todo read book` |
-| **Add Deadline** | `deadline DESCRIPTION /by DATE` | `deadline submit report /by 2025-12-31` |
-| **Add Event** | `event DESCRIPTION /from START /to END` | `event meeting /from 2pm /to 4pm` |
-| **List** | `list` | `list` |
-| **Find** | `find KEYWORD` | `find book` |
-| **Mark** | `mark INDEX` | `mark 2` |
-| **Unmark** | `unmark INDEX` | `unmark 2` |
-| **Delete** | `delete INDEX` | `delete 3` |
-| **Exit** | `bye` | `bye` |
-
-**All commands work identically in both GUI and CLI modes.**
-
----
-
-## Tips for Fast Task Management 💡
-
-### For GUI Users:
-1. **Use the Enter key** instead of clicking Send for faster input
-2. **Scroll up** to review past commands and responses
-3. **Look for color coding** to quickly identify different command types
-
-### For CLI Users:
-1. **Use short, descriptive task names** for quick scanning
-2. **Leverage your terminal's command history** (up arrow) to repeat commands
-
-### For Both Modes:
-1. **Use `find`** to quickly locate tasks instead of scrolling through the list
-2. **Mark tasks immediately** after completion to track your progress
-3. **Use consistent date formats** (yyyy-MM-dd) to avoid errors
-4. **Keep your task list organized** by deleting completed tasks regularly
+| Action | Format |
+|--------|--------|
+| Help | `help` |
+| Add todo | `todo DESCRIPTION` |
+| Add deadline | `deadline DESCRIPTION /by DATE` |
+| Add event | `event DESCRIPTION /from START /to END` |
+| List all | `list` |
+| Find | `find KEYWORD` |
+| Mark done | `mark INDEX` |
+| Mark undone | `unmark INDEX` |
+| Update | `update INDEX [/desc D] [/by DATE] [/from T] [/to T]` |
+| Duplicate | `duplicate INDEX` |
+| Delete | `delete INDEX` |
+| Exit | `bye` |
 
 ---
 
-**Enjoy using Cherry! 🍒**
-
-*Whether you prefer clicking or typing, Cherry has you covered.*
+*Enjoy Cherry's Task Café — life is brewtiful when you're organised. ☕*
