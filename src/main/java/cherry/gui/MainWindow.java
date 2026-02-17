@@ -27,6 +27,9 @@ public class MainWindow extends AnchorPane {
     private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.png"));
     private final Image cherryImage = new Image(this.getClass().getResourceAsStream("/images/Cherry.png"));
 
+    /**
+     * Initializes the main window.
+     */
     @FXML
     public void initialize() {
         loadFonts();

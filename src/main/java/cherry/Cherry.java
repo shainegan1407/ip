@@ -69,13 +69,6 @@ public class Cherry {
     }
 
     /**
-     * Gets the type of the last executed command.
-     */
-    public String getCommandType() {
-        return commandType;
-    }
-
-    /**
      * Runs the main program loop.
      * Continuously reads user input, parses commands, executes them,
      * and handles exceptions until the exit command is given.
