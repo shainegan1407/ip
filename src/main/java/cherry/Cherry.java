@@ -1,6 +1,10 @@
 package cherry;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import cherry.command.Command;
 import cherry.exception.CherryException;
@@ -22,26 +26,52 @@ public class Cherry {
     private String commandType;
 
     /**
-     * Creates a new Cherry instance with no-argument, as required by JavaFX.
+     * Constructs a Cherry instance.
+     * Determines the jar location and sets storage path relative to it.
      */
     public Cherry() {
-        this("./data/cherry.txt");
+        ui = new Ui();
+        parser = new Parser();
+        Storage tempStorage;
+        try {
+            String dataPath = getDataPath();
+            tempStorage = new Storage(dataPath);
+            tasks = new TaskList(tempStorage.load());
+        } catch (IOException e) {
+            ui.printError("Init error: " + e.getMessage());
+            tempStorage = new Storage(getDataPath());
+            tasks = new TaskList();
+        }
+        storage = tempStorage;
     }
 
     /**
-     * Creates a new Cherry application using the given storage filepath.
-     *
-     * @param filePath the path to the storage file
+     * Determines the correct data file path relative to the jar location.
+     * If running from a jar, places data/ next to the jar.
+     * If running from IDE, uses ./data/ in the project root.
      */
-    public Cherry(String filePath) {
-        ui = new Ui();
-        storage = new Storage(filePath);
-        parser = new Parser();
+    private String getDataPath() {
         try {
-            tasks = new TaskList(storage.load());
-        } catch (IOException e) {
-            ui.printError("Error loading tasks");
-            tasks = new TaskList();
+            // Get the location of the running jar or class files
+            File jarFile = new File(Cherry.class
+                    .getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .toURI());
+
+            Path dataDir;
+            if (jarFile.isFile()) {
+                // Running from jar - place data folder next to jar
+                dataDir = jarFile.getParentFile().toPath().resolve("data");
+            } else {
+                // Running from IDE - use project root
+                dataDir = Paths.get("data");
+            }
+
+            return dataDir.resolve("cherry.txt").toString();
+        } catch (URISyntaxException e) {
+            // Fallback to current directory if jar location can't be determined
+            return "./data/cherry.txt";
         }
     }
 
@@ -97,7 +127,7 @@ public class Cherry {
      * @param args command-line arguments
      */
     public static void main(String[] args) {
-        new Cherry("./data/cherry.txt").run();
+        new Cherry().run();
     }
 
 }
