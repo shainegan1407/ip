@@ -11,7 +11,7 @@ are "orders" and Cherry is your barista. It works as both a Command Line Interfa
 1. **Ensure you have Java 17 or above** installed on your computer.
 
 2. **Download the latest `.jar` file** from
-   [here](https://github.com/YOUR_USERNAME/ip/releases).
+   [here](https://github.com/shainegan1407/ip/releases).
 
 3. **Launch the app** by double-clicking the jar file, or run:
 ```
